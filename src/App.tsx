@@ -1,26 +1,56 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+  Route,
+  Outlet,
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements
+} from 'react-router-dom';
 
-function App() {
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import Box from '@mui/material/Box';
+
+import { Navbar } from './base/navbar';
+import { Footer } from './base/footer';
+
+import { MainPage } from './views/main/index';
+import { ProjectPage } from './views/projects/index';
+
+import theme from './theme';
+
+
+const AppProviderLayout = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
+        }}
+        mb={0}
+      >
+        <Navbar />
+        <Outlet />
+        <Footer />
+      </Box>
+    </ThemeProvider>
   );
 }
 
-export default App;
+
+const routes = createRoutesFromElements(
+  <Route element={<AppProviderLayout />} errorElement={<MainPage />}>
+
+    <Route path="/" element={<MainPage />} />
+
+    <Route path="/projects" element={<ProjectPage />} />
+    
+  </Route>
+);
+
+
+const router = createBrowserRouter(routes);
+
+export const App = () => <RouterProvider router={router} />
