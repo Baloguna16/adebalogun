@@ -1,1 +1,0 @@
-export { WaveEmoji } from './WaveEmoji';

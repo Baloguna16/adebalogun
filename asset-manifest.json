@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/adebalogun/static/css/main.c5d61220.css",
+    "main.js": "/adebalogun/static/js/main.fd4cfd42.js",
+    "static/js/787.aa7aaf33.chunk.js": "/adebalogun/static/js/787.aa7aaf33.chunk.js",
+    "static/media/recursive3d.jpg": "/adebalogun/static/media/recursive3d.736afb098800bfd6504d.jpg",
+    "static/media/profile-2.jpg": "/adebalogun/static/media/profile-2.3357710d6866aaaf238c.jpg",
+    "index.html": "/adebalogun/index.html",
+    "main.c5d61220.css.map": "/adebalogun/static/css/main.c5d61220.css.map",
+    "main.fd4cfd42.js.map": "/adebalogun/static/js/main.fd4cfd42.js.map",
+    "787.aa7aaf33.chunk.js.map": "/adebalogun/static/js/787.aa7aaf33.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c5d61220.css",
+    "static/js/main.fd4cfd42.js"
+  ]
+}
