@@ -17,7 +17,7 @@ export const MainPage = () => {
                     <WaveEmoji />
                 </Typography>
                 <Typography>
-                    I'm passionate about <strong>engineering</strong> 🔨 and our great, big <strong>Planet Earth</strong> 🌱 
+                    I love <strong>engineering</strong> 🔨 and our great, big <strong>Planet Earth</strong> 🌱 
                 </Typography>
                 <Typography>
                     {'\nand for a living, I get to use the first thing to fix the other.'}
