@@ -1,7 +1,6 @@
 {
   "name": "adebalogun",
   "version": "0.1.0",
-  "homepage": "https://Baloguna16.github.io/adebalogun",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.6",
