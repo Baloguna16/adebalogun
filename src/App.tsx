@@ -15,6 +15,7 @@ import { Footer } from './base/footer';
 
 import { MainPage } from './views/main/index';
 import { ProjectPage } from './views/projects/index';
+import { BlogPosts, BlogPage } from './views/blog/index';
 
 import theme from './theme';
 
@@ -46,6 +47,10 @@ const routes = createRoutesFromElements(
     <Route path="/" element={<MainPage />} />
 
     <Route path="/projects" element={<ProjectPage />} />
+
+    <Route path="/blog" element={<BlogPosts />} />
+
+    <Route path="/blog/:slug" element={<BlogPage />} />
     
   </Route>
 );

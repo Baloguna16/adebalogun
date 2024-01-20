@@ -12,8 +12,8 @@ export const MainPage = () => {
                 <img src={profileJpg} className='headshot-image' alt='ade' />
             </Box>
             <Box sx={{ mt: 5, mb: 4 }}>
-                <Typography variant="h4" mb={2}>
-                    Hey, I'm Ade
+                <Typography variant="h4" fontWeight="bold" mb={2}>
+                    Hey, I'm Adekunle
                     <WaveEmoji />
                 </Typography>
                 <Typography>
