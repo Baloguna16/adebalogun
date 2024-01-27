@@ -7,11 +7,11 @@ interface Footnote {
     link?: string;
 }
 
-interface BlogFootnotesProps {
+interface FootnotesProps {
     footnotes: Footnote[];
 }
 
-export const BlogFootnotes: React.FC<BlogFootnotesProps> = ({ footnotes }) => {
+export const PostFootnotes: React.FC<FootnotesProps> = ({ footnotes }) => {
   return (
     <List>
       {footnotes.map(({ index, body, link }, arrayIndex) => (

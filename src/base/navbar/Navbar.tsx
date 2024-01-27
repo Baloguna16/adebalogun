@@ -20,6 +20,7 @@ export const Navbar = () => {
                     display: 'flex'
                 }}>
                     <Link href="/" underline="none" sx={{ my: 2, mr: 3, color: 'primary.main', display: 'block' }}>Main</Link>
+                    <Link href="/projects" underline="none" sx={{ my: 2, mr: 3, color: 'primary.main', display: 'block' }}>Projects</Link>
                     <Link href="/blog" underline="none" sx={{ my: 2, mr: 3, color: 'primary.main', display: 'block' }}>Blog</Link>
                 </Box>
             </Paper>

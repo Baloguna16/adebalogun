@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Link as RouterLink, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Card, Box, CardMedia, Container } from '@mui/material';
 
-import { BlogSection } from './BlogSection';
-import { BlogTitle, BlogSubtitle } from './BlogTitle';
-import { BlogFootnotes } from './BlogFootnotes';
+import { PostSection } from './PostSection';
+import { PostTitle, PostSubtitle } from './PostTitle';
+import { PostFootnotes } from './PostFootnotes';
 
-interface BlogData {
+interface PostData {
     title: string;
     subtitle: string;
     banner_image: string;
@@ -14,6 +14,10 @@ interface BlogData {
     sections: Array<{
         title: string;
         paragraphs: string[];
+        quote?: {
+            text: string;
+            source?: string;
+        };
         image?: string;
   }>;
     footnotes: Array<{
@@ -23,15 +27,15 @@ interface BlogData {
     }>;
 }
 
-export const BlogPage: React.FC = () => {
+export const PostPage: React.FC = () => {
     const { slug } = useParams<{ slug: string }>();
-    const [postData, setPostData] = useState<BlogData | null>(null);
+    const [postData, setPostData] = useState<PostData | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
         try {
             const response = await fetch(`../posts/${slug}.json`); // Adjust the path accordingly
-            const data: BlogData = await response.json();
+            const data: PostData = await response.json();
 
             setPostData(data);
         } catch (error) {
@@ -40,7 +44,7 @@ export const BlogPage: React.FC = () => {
         };
 
         fetchData();
-    }, []);
+    }, [slug]);
 
     if (!postData) return null;
 
@@ -49,17 +53,17 @@ export const BlogPage: React.FC = () => {
     return (
         <Container maxWidth="sm">
             <Box sx={{ mt: 4, mb: 1 }}>
-                <BlogTitle title={title} variant="h2" />
-                <BlogSubtitle subtitle={subtitle} />
+                <PostTitle title={title} variant="h2" />
+                <PostSubtitle subtitle={subtitle} />
                 <Card>
                     <CardMedia component="img" alt={banner_image_alt} image={banner_image} />
                 </Card>
             </Box>
             <Box sx={{ mt: 1, mb: 4 }}>
                 {sections.map((section, index) => (
-                    <BlogSection section={section} index={index} />
+                    <PostSection section={section} index={index} />
                 ))}
-                <BlogFootnotes footnotes={footnotes} />
+                <PostFootnotes footnotes={footnotes} />
             </Box>
         </Container>
     );

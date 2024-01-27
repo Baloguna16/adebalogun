@@ -1,6 +1,8 @@
 import { createTheme } from '@mui/material/styles';
 import { red, blue, green } from '@mui/material/colors';
 
+const commonFontFamily = 'Space Mono, Roboto Mono, monospace';
+
 // A custom theme for this app
 const theme = createTheme({
   palette: {
@@ -21,27 +23,14 @@ const theme = createTheme({
     }
   },
   typography: {
-    fontFamily: [
-      'Roboto',       // Use Roboto as the default font for body text
-      'Arial',        // Fallback to a generic font if Roboto is not available
-      'sans-serif',
-    ].join(','),
-    h1: {
-      fontFamily: 'Roboto Mono, monospace',  // Use Roboto Mono for h1
-    },
-    h2: {
-      fontFamily: 'Roboto Mono, monospace',  // Use Roboto Mono for h2
-    },
-    h3: {
-      fontFamily: 'Roboto Mono, monospace',  // Use Roboto Mono for h2
-    },
-    h4: {
-      fontFamily: 'Roboto Mono, monospace',  // Use Roboto Mono for h2
-    }, 
-    h5: {
-      fontFamily: 'Roboto Mono, monospace',  // Use Roboto Mono for h2
-    }
-  },
+    fontFamily: 'Open Sans, Roboto, sans-serif',
+    h1: { fontFamily: `${commonFontFamily}, 'Space Mono', monospace` },
+    h2: { fontFamily: `${commonFontFamily}, 'Space Mono', monospace` },
+    h3: { fontFamily: `${commonFontFamily}, 'Space Mono', monospace` },
+    h4: { fontFamily: `${commonFontFamily}, 'Space Mono', monospace` },
+    h5: { fontFamily: `${commonFontFamily}, 'Space Mono', monospace` },
+    h6: { fontFamily: `${commonFontFamily}, 'Space Mono', monospace` },
+  }
 });
 
 export default theme;

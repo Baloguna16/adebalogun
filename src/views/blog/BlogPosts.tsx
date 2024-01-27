@@ -1,16 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom'; // Use 'react-router-dom' if you're using React Router
 import { Container, Grid, Card, CardContent, CardMedia, Typography } from '@mui/material';
 
-import { BlogTitle } from './BlogTitle';
-
 interface Post {
     filename: string;
+    date_created: string;
     title: string;
     subtitle: string;
     banner_image: string;
     slug: string;
     // Add other necessary properties
+};
+
+const formatDate = (inputDate: string): string => {
+  console.log(inputDate)
+  const [year, month, day] = inputDate.split('-');
+  const months: string[] = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  return `${months[parseInt(month, 10) - 1]} ${parseInt(day, 10)}, ${year}`;
 };
 
 export const BlogPosts = () => {
@@ -19,7 +28,7 @@ export const BlogPosts = () => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch('./posts.json'); // Adjust the path accordingly
+            const response = await fetch('./posts.json');
             const data: Post[] = await response.json();
             setPosts(data);
           } catch (error) {
@@ -56,9 +65,8 @@ export const BlogPosts = () => {
                         {post.title}
                         </Typography>
                         <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-                        {post.subtitle}
+                        {"Posted on "} {formatDate(post.date_created)}
                         </Typography>
-                        {/* Add other content of the post if needed */}
                     </CardContent>
                     </Grid>
                 </Grid>

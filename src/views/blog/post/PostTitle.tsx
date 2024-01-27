@@ -1,11 +1,11 @@
 import { Typography } from '@mui/material';
 
-interface BlogTitleProps {
+interface PostTitleProps {
     title: string;
     variant: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "subtitle1" | "subtitle2" | "body1" | "body2" | "caption" | "button" | "overline" | "inherit" | undefined;
 }
 
-export const BlogTitle = ({ title, variant }: BlogTitleProps) => {
+export const PostTitle = ({ title, variant }: PostTitleProps) => {
     const titleFontSize = calculateTitleFontSize();
 
     function calculateTitleFontSize() {
@@ -27,11 +27,11 @@ export const BlogTitle = ({ title, variant }: BlogTitleProps) => {
     );
 }
 
-interface BlogSubtitleProps {
+interface PostSubtitleProps {
     subtitle: string;
   }
   
-  export const BlogSubtitle: React.FC<BlogSubtitleProps> = ({ subtitle }) => {
+  export const PostSubtitle: React.FC<PostSubtitleProps> = ({ subtitle }) => {
     return (
       <Typography 
         variant="body1" 
