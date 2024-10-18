@@ -3,7 +3,7 @@ import { Typography } from '@mui/material';
 
 import { WaveEmoji } from '../../base/emojis';
 
-import profileJpg from './assets/profile-2.jpg';
+import profileJpg from './assets/profile-3.jpg';
 
 export const MainPage = () => {
     return (

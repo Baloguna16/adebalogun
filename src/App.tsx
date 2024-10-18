@@ -14,7 +14,7 @@ import { Navbar } from './base/navbar';
 import { Footer } from './base/footer';
 
 import { MainPage } from './views/main/index';
-import { ProjectPosts } from './views/projects/index';
+import { ProjectPosts, WaterMap } from './views/projects/index';
 import { BlogPosts } from './views/blog/index';
 import { PostPage } from './views/blog/post/index';
 
@@ -48,6 +48,8 @@ const routes = createRoutesFromElements(
     <Route path="/" element={<MainPage />} />
 
     <Route path="/projects" element={<ProjectPosts />} />
+
+    <Route path="/projects/nyc-water" element={<WaterMap />} />
 
     <Route path="/blog" element={<BlogPosts />} />
 
