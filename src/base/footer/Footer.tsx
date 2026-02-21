@@ -23,9 +23,9 @@ export const Footer = () => {
                     <Link href="https://youtu.be/3tkQyqLnFbk?t=5478" underline="none">{'this interview'}</Link>.
                 </Typography>
                 <Box sx={{ mt: 1 }}>
-                    <Link href="mailto:ade.d.balogun@gmail.com" mr={2}><Email /></Link>
-                    <Link href="https://github.com/Baloguna16" mr={2}><GitHub /></Link>
-                    <Link href="https://www.linkedin.com/in/adbalogun/" mr={2}><LinkedIn /></Link>
+                    <Link href="mailto:ade.d.balogun@gmail.com" mr={2} aria-label="Email"><Email /></Link>
+                    <Link href="https://github.com/Baloguna16" mr={2} aria-label="GitHub"><GitHub /></Link>
+                    <Link href="https://www.linkedin.com/in/adbalogun/" mr={2} aria-label="LinkedIn"><LinkedIn /></Link>
                 </Box>
             </Container>
         </Box>

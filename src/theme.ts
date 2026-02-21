@@ -1,11 +1,12 @@
 import { createTheme } from '@mui/material/styles';
+import { PaletteMode } from '@mui/material';
 import { red, blue, green } from '@mui/material/colors';
 
 const commonFontFamily = 'Space Mono, Roboto Mono, monospace';
 
-// A custom theme for this app
-const theme = createTheme({
+export const getTheme = (mode: PaletteMode) => createTheme({
   palette: {
+    mode,
     primary: {
       main: '#556cd6',
     },
@@ -33,4 +34,4 @@ const theme = createTheme({
   }
 });
 
-export default theme;
+export default getTheme('light');

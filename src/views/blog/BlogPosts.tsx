@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom'; // Use 'react-router-dom' if you're using React Router
+import { Link as RouterLink } from 'react-router-dom';
 import { Container, Grid, Card, CardContent, CardMedia, Typography } from '@mui/material';
 
 interface Post {
@@ -9,11 +9,9 @@ interface Post {
     subtitle: string;
     banner_image: string;
     slug: string;
-    // Add other necessary properties
 };
 
 const formatDate = (inputDate: string): string => {
-  console.log(inputDate)
   const [year, month, day] = inputDate.split('-');
   const months: string[] = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -28,11 +26,11 @@ export const BlogPosts = () => {
     useEffect(() => {
         const fetchData = async () => {
           try {
-            const response = await fetch('./posts.json');
+            const response = await fetch('/posts.json');
             const data: Post[] = await response.json();
             setPosts(data);
-          } catch (error) {
-            console.error('Error fetching data:', error);
+          } catch {
+            setPosts([]);
           }
         };
     
@@ -52,7 +50,7 @@ export const BlogPosts = () => {
                     <Grid item xs={3}>
                         <CardMedia
                         component="img"
-                        alt="Post Banner"
+                        alt={`Banner for ${post.title}`}
                         height="100"
                         image={post.banner_image}
                         style={{ marginTop: '10px' }}
