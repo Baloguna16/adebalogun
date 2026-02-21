@@ -15,7 +15,7 @@ interface LinkArray {
 const linksData: LinkArray = {
   links: [
     { path: '/projects/hubbub', title: 'Hubbub — Rental marketplace', date_completed: 'December 2022', type: 'internal' },
-    { path: '/documents/pr-cultivation-io-2021.pdf', title: 'Modelling input-output relationships to optimize production of a live-attenuated malaria vaccine', date_completed: 'January 27, 2024' }
+    { path: '/documents/pr-cultivation-io-2021.pdf', title: 'Modelling input-output relationships to optimize production of a live-attenuated malaria vaccine', date_completed: 'October 1, 2021' }
   ],
 };
 
