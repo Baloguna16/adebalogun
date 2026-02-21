@@ -1,6 +1,6 @@
 import {APIProvider, Map} from '@vis.gl/react-google-maps';
 
-import { NewCrotonDamMarker, NewCrotonAqueductMarker } from './markers'
+import { NewCrotonDamMarker } from './markers'
 
 interface LatLngBounds {
     east: number;
@@ -18,7 +18,7 @@ const watershedBounds: LatLngBounds = {
 
 export const WaterMap = () => {
     return(
-        <APIProvider apiKey={'AIzaSyBPAlQdlhd4PPYuk6Pp-MQhJwvMMVgReu4'}>
+        <APIProvider apiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY || ''}>
             <Map
             style={{width: '100vw', height: '100vh'}}
             defaultCenter={{lat: 40.895687, lng: -73.605657}}
