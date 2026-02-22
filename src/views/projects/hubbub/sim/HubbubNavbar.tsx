@@ -19,7 +19,7 @@ export const HubbubNavbar = () => (
     >
       HUBBUB
     </span>
-    <div style={{ display: 'flex', gap: '24px' }}>
+    <div className="hubbub-nav-links">
       {['Browse', 'How It Works', 'List an Item', 'Log In'].map((item) => (
         <span
           key={item}
@@ -34,5 +34,6 @@ export const HubbubNavbar = () => (
         </span>
       ))}
     </div>
+    <span className="hubbub-nav-hamburger">&#9776;</span>
   </nav>
 );

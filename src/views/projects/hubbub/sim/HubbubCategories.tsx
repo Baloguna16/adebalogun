@@ -5,15 +5,7 @@ export const HubbubCategories = () => (
     <h2 style={{ textAlign: 'center', fontSize: '1.5rem', color: '#1a1a2e', marginBottom: '32px' }}>
       Browse Categories
     </h2>
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: '16px',
-        maxWidth: '600px',
-        margin: '0 auto',
-      }}
-    >
+    <div className="hubbub-category-grid">
       {categories.map((cat) => (
         <div key={cat.label} className="hubbub-category-card">
           <div style={{ fontSize: '2rem', marginBottom: '8px' }}>{cat.emoji}</div>
