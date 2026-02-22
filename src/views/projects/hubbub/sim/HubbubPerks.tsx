@@ -15,15 +15,7 @@ export const HubbubPerks = () => (
     >
       Why Hubbub?
     </h2>
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(4, 1fr)',
-        gap: '24px',
-        maxWidth: '800px',
-        margin: '0 auto',
-      }}
-    >
+    <div className="hubbub-perks-grid">
       {perks.map((perk) => (
         <div key={perk.title} style={{ textAlign: 'center', color: '#fff' }}>
           <div style={{ fontSize: '2rem', marginBottom: '8px' }}>{perk.icon}</div>

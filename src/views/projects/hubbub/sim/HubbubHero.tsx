@@ -1,14 +1,6 @@
 export const HubbubHero = () => (
-  <section
-    style={{
-      background: '#e8f4fc',
-      padding: '64px 32px',
-      textAlign: 'center',
-    }}
-  >
-    <h1 style={{ fontSize: '2.25rem', color: '#1a1a2e', marginBottom: '12px' }}>
-      Rent Anything on Hubbub
-    </h1>
+  <section className="hubbub-hero">
+    <h1>Rent Anything on Hubbub</h1>
     <p style={{ color: '#555', fontSize: '1.1rem', marginBottom: '32px' }}>
       The marketplace for students to rent what they need and save.
     </p>

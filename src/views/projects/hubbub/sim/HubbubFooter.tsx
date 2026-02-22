@@ -6,16 +6,7 @@ const footerColumns = [
 
 export const HubbubFooter = () => (
   <footer style={{ background: '#111', padding: '40px 32px 24px', color: '#fff' }}>
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        maxWidth: '720px',
-        margin: '0 auto',
-        flexWrap: 'wrap',
-        gap: '24px',
-      }}
-    >
+    <div className="hubbub-footer-inner">
       <div>
         <div
           style={{

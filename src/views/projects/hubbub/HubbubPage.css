@@ -38,6 +38,19 @@
   animation: hubbubGradient 8s ease infinite;
 }
 
+/* Navbar */
+.hubbub-nav-links {
+  display: flex;
+  gap: 24px;
+}
+
+.hubbub-nav-hamburger {
+  display: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: default;
+}
+
 /* Product card hover */
 .hubbub-product-card {
   border-radius: 8px;
@@ -67,4 +80,108 @@
 .hubbub-category-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Grids */
+.hubbub-category-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.hubbub-product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.hubbub-perks-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hubbub-footer-inner {
+  display: flex;
+  justify-content: space-between;
+  max-width: 720px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+/* Hero */
+.hubbub-hero {
+  background: #e8f4fc;
+  padding: 64px 32px;
+  text-align: center;
+}
+
+.hubbub-hero h1 {
+  font-size: 2.25rem;
+  color: #1a1a2e;
+  margin-bottom: 12px;
+}
+
+/* Mobile breakpoint */
+@media (max-width: 600px) {
+  /* Navbar: hide links, show hamburger */
+  .hubbub-nav-links {
+    display: none;
+  }
+
+  .hubbub-nav-hamburger {
+    display: block;
+  }
+
+  /* Hero: reduce padding and font */
+  .hubbub-hero {
+    padding: 40px 20px;
+  }
+
+  .hubbub-hero h1 {
+    font-size: 1.5rem;
+  }
+
+  /* Categories: 3 → 2 columns */
+  .hubbub-category-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  /* Products: 3 → 1 column */
+  .hubbub-product-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  /* Product card: horizontal layout on mobile */
+  .hubbub-product-card {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .hubbub-product-card .hubbub-product-image {
+    width: 120px;
+    min-height: 100px;
+    height: auto;
+  }
+
+  /* Perks: 4 → 1 column */
+  .hubbub-perks-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  /* Footer: stacked */
+  .hubbub-footer-inner {
+    flex-direction: column;
+    gap: 20px;
+  }
 }

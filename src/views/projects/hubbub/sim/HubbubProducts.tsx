@@ -16,18 +16,11 @@ export const HubbubProducts = () => (
         Sort by: Popularity
       </span>
     </div>
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(3, 1fr)',
-        gap: '20px',
-        maxWidth: '720px',
-        margin: '0 auto',
-      }}
-    >
+    <div className="hubbub-product-grid">
       {products.map((product) => (
         <div key={product.name} className="hubbub-product-card">
           <div
+            className="hubbub-product-image"
             style={{
               height: '140px',
               background: product.color,
