@@ -34,7 +34,7 @@ export const HubbubPage = () => (
 
     <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mb: 4 }}>
       {techStack.map((tech) => (
-        <Chip key={tech} label={tech} size="small" variant="outlined" />
+        <Chip key={tech} label={tech} size="small" variant="outlined" color="primary" />
       ))}
     </Stack>
 

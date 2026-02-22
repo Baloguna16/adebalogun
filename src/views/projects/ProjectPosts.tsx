@@ -24,7 +24,7 @@ const LinkCard = ({ link }: { link: Link }) => (
     <Grid container>
       <Grid item xs={12}>
         <CardContent>
-          <Typography variant="h6" fontWeight="bold" component="div">
+          <Typography variant="h6" fontWeight="bold" component="div" color="primary">
             {link.title}
           </Typography>
           <Typography variant="subtitle1" color="textSecondary" gutterBottom>
@@ -45,7 +45,7 @@ export const ProjectPosts = () => {
             {link.type === 'internal' ? (
               <RouterLink
                 to={link.path}
-                style={{ textDecoration: 'none', color: 'blue' }}
+                style={{ textDecoration: 'none', color: 'inherit' }}
               >
                 <LinkCard link={link} />
               </RouterLink>
@@ -54,7 +54,7 @@ export const ProjectPosts = () => {
                 href={link.path}
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ textDecoration: 'none', color: 'blue' }}
+                style={{ textDecoration: 'none', color: 'inherit' }}
               >
                 <LinkCard link={link} />
               </a>

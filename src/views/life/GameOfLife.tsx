@@ -53,7 +53,7 @@ export const GameOfLife = () => {
   const [dimensions, setDimensions] = useState({ rows: 0, cols: 0 });
 
   const isDark = theme.palette.mode === 'dark';
-  const cellColor = isDark ? '#90caf9' : '#556cd6';
+  const cellColor = isDark ? '#08FF00' : '#5D3FD3';
   const gridColor = isDark ? '#333' : '#ddd';
   const bgColor = isDark ? '#121212' : '#fff';
 
