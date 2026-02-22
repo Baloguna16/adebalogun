@@ -8,7 +8,7 @@ export const getTheme = (mode: PaletteMode) => createTheme({
   palette: {
     mode,
     primary: {
-      main: '#556cd6',
+      main: mode === 'light' ? '#5D3FD3' : '#08FF00',
     },
     secondary: {
       main: '#19857b',
