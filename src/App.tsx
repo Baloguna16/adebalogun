@@ -29,6 +29,8 @@ const PostPage = lazy(() => import('./views/blog/post/PostPage').then(m => ({ de
 const NotFound = lazy(() => import('./views/NotFound').then(m => ({ default: m.NotFound })));
 const GameOfLife = lazy(() => import('./views/life/GameOfLife').then(m => ({ default: m.GameOfLife })));
 const HubbubPage = lazy(() => import('./views/projects/hubbub').then(m => ({ default: m.HubbubPage })));
+const ToolsIndex = lazy(() => import('./views/tools/ToolsIndex').then(m => ({ default: m.ToolsIndex })));
+const MarkdownViewer = lazy(() => import('./views/tools/markdown-viewer/MarkdownViewer').then(m => ({ default: m.MarkdownViewer })));
 
 const Loading = () => (
   <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
@@ -93,6 +95,9 @@ const routes = createRoutesFromElements(
     <Route path="/blog/:slug" element={<PostPage />} />
 
     <Route path="/life" element={<GameOfLife />} />
+
+    <Route path="/tools" element={<ToolsIndex />} />
+    <Route path="/tools/markdown-viewer" element={<MarkdownViewer />} />
 
     <Route path="*" element={<NotFound />} />
 
