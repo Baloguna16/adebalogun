@@ -31,6 +31,7 @@ const GameOfLife = lazy(() => import('./views/life/GameOfLife').then(m => ({ def
 const HubbubPage = lazy(() => import('./views/projects/hubbub').then(m => ({ default: m.HubbubPage })));
 const ToolsIndex = lazy(() => import('./views/tools/ToolsIndex').then(m => ({ default: m.ToolsIndex })));
 const MarkdownViewer = lazy(() => import('./views/tools/markdown-viewer/MarkdownViewer').then(m => ({ default: m.MarkdownViewer })));
+const GynOncMap = lazy(() => import('./views/projects/gyn-onc-map').then(m => ({ default: m.GynOncMap })));
 
 const Loading = () => (
   <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
@@ -89,6 +90,8 @@ const routes = createRoutesFromElements(
     <Route path="/projects/nyc-water" element={<WaterMap />} />
 
     <Route path="/projects/hubbub" element={<HubbubPage />} />
+
+    <Route path="/projects/gyn-onc-fellowships" element={<GynOncMap />} />
 
     <Route path="/blog" element={<BlogPosts />} />
 
