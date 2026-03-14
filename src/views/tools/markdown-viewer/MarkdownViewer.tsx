@@ -11,6 +11,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -66,6 +67,7 @@ export const MarkdownViewer = () => {
   const [copyTooltip, setCopyTooltip] = useState('Copy Markdown');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const lineNumberRef = useRef<HTMLDivElement>(null);
+  const previewContentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     sessionStorage.setItem(STORAGE_KEY, markdown);
@@ -81,6 +83,45 @@ export const MarkdownViewer = () => {
   const handleClear = useCallback(() => {
     setMarkdown('');
     sessionStorage.removeItem(STORAGE_KEY);
+  }, []);
+
+  const handleExportPdf = useCallback(() => {
+    const previewEl = previewContentRef.current;
+    if (!previewEl) return;
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+    printWindow.document.write(
+      `<!DOCTYPE html><html><head><title>Markdown Export</title>` +
+      `<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">` +
+      `<style>` +
+      `body { font-family: 'Open Sans', sans-serif; line-height: 1.7; padding: 40px; max-width: 800px; margin: 0 auto; color: #222; }` +
+      `h1, h2, h3, h4, h5, h6 { font-family: 'Space Mono', monospace; margin-top: 1.5em; margin-bottom: 0.5em; }` +
+      `h1 { font-size: 2rem; border-bottom: 2px solid #333; padding-bottom: 4px; }` +
+      `h2 { font-size: 1.5rem; border-bottom: 1px solid #ccc; padding-bottom: 4px; }` +
+      `h3 { font-size: 1.25rem; }` +
+      `p { margin: 1em 0; }` +
+      `code { font-family: 'Space Mono', monospace; font-size: 0.85em; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 3px; }` +
+      `pre { background: #f5f5f5; padding: 16px; border-radius: 6px; overflow: auto; margin: 1em 0; }` +
+      `pre code { background: transparent; padding: 0; }` +
+      `blockquote { border-left: 3px solid #333; padding-left: 16px; margin-left: 0; color: #555; font-style: italic; }` +
+      `.table-wrapper { overflow-x: auto; margin: 1em 0; border-radius: 4px; border: 1px solid #ddd; }` +
+      `table { width: 100%; border-collapse: collapse; min-width: 400px; }` +
+      `th, td { border-bottom: 1px solid #ddd; padding: 10px 16px; text-align: left; vertical-align: top; font-size: 0.9rem; }` +
+      `td:not(:last-child), th:not(:last-child) { border-right: 1px solid #ddd; }` +
+      `th { background: rgba(0,0,0,0.04); font-family: 'Space Mono', monospace; font-weight: 600; font-size: 0.85rem; }` +
+      `tr:last-child td { border-bottom: none; }` +
+      `hr { border: none; border-top: 1px solid #ccc; margin: 24px 0; }` +
+      `img { max-width: 100%; }` +
+      `ul, ol { padding-left: 24px; }` +
+      `li { margin-bottom: 4px; }` +
+      `a { color: #1976d2; text-decoration: none; }` +
+      `@media print { body { padding: 0; } }` +
+      `</style></head><body>${previewEl.innerHTML}</body></html>`,
+    );
+    printWindow.document.close();
+    printWindow.onload = () => {
+      printWindow.print();
+    };
   }, []);
 
   const lineCount = markdown.split('\n').length;
@@ -123,6 +164,11 @@ export const MarkdownViewer = () => {
         <Tooltip title="Clear">
           <IconButton size="small" onClick={handleClear}>
             <DeleteOutlineIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Export as PDF">
+          <IconButton size="small" onClick={handleExportPdf}>
+            <PictureAsPdfIcon fontSize="small" />
           </IconButton>
         </Tooltip>
         <Tooltip title={editorOpen ? 'Collapse editor' : 'Expand editor'}>
@@ -218,15 +264,21 @@ export const MarkdownViewer = () => {
       }}
     >
       {!editorOpen && (
-        <Box sx={{ mb: 1 }}>
+        <Box sx={{ mb: 1, display: 'flex', gap: 0.5 }}>
           <Tooltip title="Expand editor">
             <IconButton size="small" onClick={() => setEditorOpen(true)}>
               <ChevronRightIcon fontSize="small" />
             </IconButton>
           </Tooltip>
+          <Tooltip title="Export as PDF">
+            <IconButton size="small" onClick={handleExportPdf}>
+              <PictureAsPdfIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
         </Box>
       )}
       <Box
+        ref={previewContentRef}
         sx={{
           fontFamily: 'Open Sans, Roboto, sans-serif',
           fontSize: '1rem',
