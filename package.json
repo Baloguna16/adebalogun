@@ -36,7 +36,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "yarn build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "sync-research": "node scripts/sync-research.mjs",
+    "sync-research:no-audio": "node scripts/sync-research.mjs --no-audio"
   },
   "eslintConfig": {
     "extends": [
