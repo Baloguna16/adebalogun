@@ -273,9 +273,18 @@ async function main() {
   console.log(`Audio generation: ${NO_AUDIO ? 'SKIPPED (--no-audio)' : 'ENABLED'}`);
   console.log('');
 
+  // Check API key early when audio is enabled
+  if (!NO_AUDIO && !process.env.OPENAI_API_KEY) {
+    console.error('Error: OPENAI_API_KEY environment variable is required for audio generation.');
+    console.error('Run with --no-audio to skip, or set OPENAI_API_KEY.');
+    process.exit(1);
+  }
+
   // Ensure output dirs exist
   fs.mkdirSync(OUT_PAPERS_DIR, { recursive: true });
-  fs.mkdirSync(OUT_AUDIO_DIR, { recursive: true });
+  if (!NO_AUDIO) {
+    fs.mkdirSync(OUT_AUDIO_DIR, { recursive: true });
+  }
 
   // Read all .md files
   const allFiles = fs.readdirSync(RESEARCH_DIR);

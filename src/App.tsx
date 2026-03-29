@@ -32,6 +32,9 @@ const HubbubPage = lazy(() => import('./views/projects/hubbub').then(m => ({ def
 const ToolsIndex = lazy(() => import('./views/tools/ToolsIndex').then(m => ({ default: m.ToolsIndex })));
 const MarkdownViewer = lazy(() => import('./views/tools/markdown-viewer/MarkdownViewer').then(m => ({ default: m.MarkdownViewer })));
 const GynOncMap = lazy(() => import('./views/projects/gyn-onc-map').then(m => ({ default: m.GynOncMap })));
+const WeddingBudget = lazy(() => import('./views/tools/wedding-budget/WeddingBudget').then(m => ({ default: m.WeddingBudget })));
+const ResearchIndex = lazy(() => import('./views/research/ResearchIndex').then(m => ({ default: m.ResearchIndex })));
+const ResearchPaper = lazy(() => import('./views/research/ResearchPaper').then(m => ({ default: m.ResearchPaper })));
 
 const Loading = () => (
   <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
@@ -101,6 +104,10 @@ const routes = createRoutesFromElements(
 
     <Route path="/tools" element={<ToolsIndex />} />
     <Route path="/tools/markdown-viewer" element={<MarkdownViewer />} />
+    <Route path="/tools/wedding-budget" element={<WeddingBudget />} />
+
+    <Route path="/research" element={<ResearchIndex />} />
+    <Route path="/research/:slug" element={<ResearchPaper />} />
 
     <Route path="*" element={<NotFound />} />
 

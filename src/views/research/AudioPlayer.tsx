@@ -111,7 +111,7 @@ export const AudioPlayer = ({ src }: AudioPlayerProps) => {
       }}
     >
       {/* Hidden native audio element */}
-      <audio ref={audioRef} src={src} preload="metadata" />
+      <audio ref={audioRef} src={src} preload="metadata" hidden />
 
       {/* Play/Pause Button */}
       <IconButton
