@@ -37,6 +37,7 @@ const ResearchIndex = lazy(() => import('./views/research/ResearchIndex').then(m
 const ResearchPaper = lazy(() => import('./views/research/ResearchPaper').then(m => ({ default: m.ResearchPaper })));
 const DonatePage = lazy(() => import('./views/donate').then(m => ({ default: m.DonatePage })));
 const RickrollRedirect = lazy(() => import('./views/rickroll-redirect').then(m => ({ default: m.RickrollRedirect })));
+const RickrollGenerator = lazy(() => import('./views/tools/rickroll').then(m => ({ default: m.RickrollGenerator })));
 
 const Loading = () => (
   <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
@@ -110,6 +111,7 @@ const routes = createRoutesFromElements(
       <Route path="/tools" element={<ToolsIndex />} />
       <Route path="/tools/markdown-viewer" element={<MarkdownViewer />} />
       <Route path="/tools/wedding-budget" element={<WeddingBudget />} />
+      <Route path="/tools/rickroll" element={<RickrollGenerator />} />
       <Route path="/research" element={<ResearchIndex />} />
       <Route path="/research/:slug" element={<ResearchPaper />} />
       <Route path="*" element={<NotFound />} />

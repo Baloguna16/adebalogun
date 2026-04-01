@@ -13,6 +13,16 @@ const tools: Tool[] = [
     title: 'Markdown Viewer',
     description: 'Paste Markdown and preview it rendered in real time.',
   },
+  {
+    path: '/tools/wedding-budget',
+    title: 'Wedding Budget Planner',
+    description: 'Plan and compare wedding budget scenarios with CT cost estimates for a 300-guest celebration.',
+  },
+  {
+    path: '/tools/rickroll',
+    title: 'Rickroll Link Generator',
+    description: 'Generate disguised links that redirect to a surprise.',
+  },
 ];
 
 export const ToolsIndex = () => (
