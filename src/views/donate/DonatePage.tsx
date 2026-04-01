@@ -32,9 +32,56 @@ export const DonatePage = () => {
         </div>
       </nav>
 
-      {/* Page body placeholder */}
+      {/* Campaign Body */}
       <div className="gfm-body">
-        <p>Campaign content goes here</p>
+        <div className="gfm-content">
+          {/* Left Column */}
+          <div className="gfm-main">
+            <h1 className="gfm-title">Help Ade Replace His Destroyed 3D Printer</h1>
+
+            <div className="gfm-hero">
+              <img src="/images/melted-printer.jpg" alt="Destroyed 3D printer with melted filament" className="gfm-hero-img" />
+            </div>
+
+            <div className="gfm-organizer">
+              <img src="/images/profile.jpg" alt="Ade Balogun" className="gfm-organizer-img" />
+              <div className="gfm-organizer-info">
+                <span className="gfm-organizer-name">Ade Balogun</span> is organizing this fundraiser
+              </div>
+            </div>
+
+            <hr className="gfm-divider" />
+
+            <div className="gfm-story">
+              <p>I never thought I'd be making one of these but here we are.</p>
+              <p>A few weeks ago my 3D printer completely self-destructed in the middle of a print. I came back to find melted plastic everywhere — it fused together into a giant mess and basically destroyed the whole machine from the inside out. I tried fixing it myself which only made things worse and cost me even more money in parts that didn't help.</p>
+              <p>The repair guy took one look at it and said it's done. Between the printer itself, all the materials I've wasted, and the parts I bought trying to fix it, I'm over $800 in the hole. I was saving up for a new one but I'm not even close.</p>
+              <p>3D printing is my favorite hobby and honestly one of the things that keeps me sane. I was in the middle of making gifts for friends when this happened which makes it even worse.</p>
+              <p>Anything helps — even just sharing this. Thank you.</p>
+            </div>
+
+            <hr className="gfm-divider" />
+
+            <div className="gfm-reactions">
+              <span className="gfm-reaction">💚</span>
+              <span className="gfm-reaction">😢</span>
+              <span className="gfm-reaction">🙏</span>
+              <span className="gfm-reaction-count">8</span>
+            </div>
+
+            <div className="gfm-protection">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#274A34">
+                <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm-1 15l-4-4 1.41-1.41L11 14.17l6.59-6.59L19 9l-8 8z"/>
+              </svg>
+              <span className="gfm-protection-text">Donation protected</span>
+            </div>
+          </div>
+
+          {/* Right Column — Sidebar (built in next task) */}
+          <div className="gfm-sidebar">
+            <p>Sidebar placeholder</p>
+          </div>
+        </div>
       </div>
     </div>
   );
