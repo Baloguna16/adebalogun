@@ -36,6 +36,7 @@ const WeddingBudget = lazy(() => import('./views/tools/wedding-budget/WeddingBud
 const ResearchIndex = lazy(() => import('./views/research/ResearchIndex').then(m => ({ default: m.ResearchIndex })));
 const ResearchPaper = lazy(() => import('./views/research/ResearchPaper').then(m => ({ default: m.ResearchPaper })));
 const DonatePage = lazy(() => import('./views/donate').then(m => ({ default: m.DonatePage })));
+const RickrollRedirect = lazy(() => import('./views/rickroll-redirect').then(m => ({ default: m.RickrollRedirect })));
 
 const Loading = () => (
   <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
@@ -89,6 +90,11 @@ const routes = createRoutesFromElements(
     <Route path="/donate" element={
       <Suspense fallback={<Loading />}>
         <DonatePage />
+      </Suspense>
+    } />
+    <Route path="/r/:slug" element={
+      <Suspense fallback={<Loading />}>
+        <RickrollRedirect />
       </Suspense>
     } />
 

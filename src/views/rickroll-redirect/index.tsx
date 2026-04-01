@@ -1,0 +1,1 @@
+export { RickrollRedirect } from './RickrollRedirect';
