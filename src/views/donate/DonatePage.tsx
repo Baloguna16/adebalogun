@@ -1,6 +1,10 @@
 import './DonatePage.css';
 
 export const DonatePage = () => {
+  const handleReveal = () => {
+    // Will be implemented in Task 5
+  };
+
   return (
     <div className="gfm-page">
       {/* Top Nav */}
@@ -77,9 +81,84 @@ export const DonatePage = () => {
             </div>
           </div>
 
-          {/* Right Column — Sidebar (built in next task) */}
+          {/* Right Column — Sidebar */}
           <div className="gfm-sidebar">
-            <p>Sidebar placeholder</p>
+            <div className="gfm-donation-card">
+              <div className="gfm-raised">
+                <span className="gfm-raised-amount">$150 raised</span>
+                <span className="gfm-raised-goal"> of $1,200</span>
+              </div>
+
+              <div className="gfm-progress-track">
+                <div className="gfm-progress-fill" style={{ width: '12.5%' }} />
+              </div>
+
+              <div className="gfm-donation-count">6 donations</div>
+
+              <button className="gfm-share-btn" onClick={handleReveal}>Share</button>
+              <button className="gfm-donate-btn" onClick={handleReveal}>Donate now</button>
+
+              <div className="gfm-donor-list">
+                <div className="gfm-donor-list-header">Recent donations</div>
+
+                <div className="gfm-donor">
+                  <div className="gfm-donor-avatar">J</div>
+                  <div className="gfm-donor-info">
+                    <div className="gfm-donor-name">Jake</div>
+                    <div className="gfm-donor-detail"><span className="gfm-donor-amount">$50</span> · 2 hrs</div>
+                  </div>
+                  <div className="gfm-donor-comment">"Get back to printing bro"</div>
+                </div>
+
+                <div className="gfm-donor">
+                  <div className="gfm-donor-avatar">F</div>
+                  <div className="gfm-donor-info">
+                    <div className="gfm-donor-name">Femi</div>
+                    <div className="gfm-donor-detail"><span className="gfm-donor-amount">$40</span> · 5 hrs</div>
+                  </div>
+                  <div className="gfm-donor-comment">"This is so sad lol"</div>
+                </div>
+
+                <div className="gfm-donor">
+                  <div className="gfm-donor-avatar">S</div>
+                  <div className="gfm-donor-info">
+                    <div className="gfm-donor-name">Sean</div>
+                    <div className="gfm-donor-detail"><span className="gfm-donor-amount">$25</span> · 8 hrs</div>
+                  </div>
+                </div>
+
+                <div className="gfm-donor">
+                  <div className="gfm-donor-avatar">H</div>
+                  <div className="gfm-donor-info">
+                    <div className="gfm-donor-name">Hugh Jazz</div>
+                    <div className="gfm-donor-detail"><span className="gfm-donor-amount">$20</span> · 12 hrs</div>
+                  </div>
+                  <div className="gfm-donor-comment">"Stay strong man"</div>
+                </div>
+
+                <div className="gfm-donor">
+                  <div className="gfm-donor-avatar">A</div>
+                  <div className="gfm-donor-info">
+                    <div className="gfm-donor-name">Anonymous</div>
+                    <div className="gfm-donor-detail"><span className="gfm-donor-amount">$15</span> · 1 day</div>
+                  </div>
+                </div>
+
+                <div className="gfm-donor">
+                  <div className="gfm-donor-avatar">L</div>
+                  <div className="gfm-donor-info">
+                    <div className="gfm-donor-name">Lisa Chen</div>
+                    <div className="gfm-donor-detail"><span className="gfm-donor-amount">$10</span> · 1 day</div>
+                  </div>
+                  <div className="gfm-donor-comment">"Hope this helps!"</div>
+                </div>
+              </div>
+
+              <div className="gfm-card-footer">
+                <div className="gfm-card-meta">Creative Projects</div>
+                <div className="gfm-card-meta">Created 2 days ago</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
