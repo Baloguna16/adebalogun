@@ -1,0 +1,7 @@
+/* GoFundMe clone styles */
+.gfm-page {
+  font-family: "GoFundMe Sans", Trebuchet, Helvetica, Arial, sans-serif;
+  background: #fff;
+  color: #232323;
+  min-height: 100vh;
+}

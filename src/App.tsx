@@ -35,6 +35,7 @@ const GynOncMap = lazy(() => import('./views/projects/gyn-onc-map').then(m => ({
 const WeddingBudget = lazy(() => import('./views/tools/wedding-budget/WeddingBudget').then(m => ({ default: m.WeddingBudget })));
 const ResearchIndex = lazy(() => import('./views/research/ResearchIndex').then(m => ({ default: m.ResearchIndex })));
 const ResearchPaper = lazy(() => import('./views/research/ResearchPaper').then(m => ({ default: m.ResearchPaper })));
+const DonatePage = lazy(() => import('./views/donate').then(m => ({ default: m.DonatePage })));
 
 const Loading = () => (
   <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
@@ -84,34 +85,30 @@ const AppProviderLayout = () => {
 
 
 const routes = createRoutesFromElements(
-  <Route element={<AppProviderLayout />}>
+  <>
+    <Route path="/donate" element={
+      <Suspense fallback={<Loading />}>
+        <DonatePage />
+      </Suspense>
+    } />
 
-    <Route path="/" element={<MainPage />} />
-
-    <Route path="/projects" element={<ProjectPosts />} />
-
-    <Route path="/projects/nyc-water" element={<WaterMap />} />
-
-    <Route path="/projects/hubbub" element={<HubbubPage />} />
-
-    <Route path="/projects/gyn-onc-fellowships" element={<GynOncMap />} />
-
-    <Route path="/blog" element={<BlogPosts />} />
-
-    <Route path="/blog/:slug" element={<PostPage />} />
-
-    <Route path="/life" element={<GameOfLife />} />
-
-    <Route path="/tools" element={<ToolsIndex />} />
-    <Route path="/tools/markdown-viewer" element={<MarkdownViewer />} />
-    <Route path="/tools/wedding-budget" element={<WeddingBudget />} />
-
-    <Route path="/research" element={<ResearchIndex />} />
-    <Route path="/research/:slug" element={<ResearchPaper />} />
-
-    <Route path="*" element={<NotFound />} />
-
-  </Route>
+    <Route element={<AppProviderLayout />}>
+      <Route path="/" element={<MainPage />} />
+      <Route path="/projects" element={<ProjectPosts />} />
+      <Route path="/projects/nyc-water" element={<WaterMap />} />
+      <Route path="/projects/hubbub" element={<HubbubPage />} />
+      <Route path="/projects/gyn-onc-fellowships" element={<GynOncMap />} />
+      <Route path="/blog" element={<BlogPosts />} />
+      <Route path="/blog/:slug" element={<PostPage />} />
+      <Route path="/life" element={<GameOfLife />} />
+      <Route path="/tools" element={<ToolsIndex />} />
+      <Route path="/tools/markdown-viewer" element={<MarkdownViewer />} />
+      <Route path="/tools/wedding-budget" element={<WeddingBudget />} />
+      <Route path="/research" element={<ResearchIndex />} />
+      <Route path="/research/:slug" element={<ResearchPaper />} />
+      <Route path="*" element={<NotFound />} />
+    </Route>
+  </>
 );
 
 
