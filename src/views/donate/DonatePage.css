@@ -363,6 +363,12 @@
   }
 }
 
+.gfm-page-revealed {
+  background: #111;
+  overflow: hidden;
+  height: 100vh;
+}
+
 /* Campaign wrapper — target of the melt animation */
 .gfm-campaign {
   transition: transform 1.5s ease-in, opacity 1s ease-in;
@@ -405,7 +411,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 50;
+  z-index: 200;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.8s ease-in 0.7s;

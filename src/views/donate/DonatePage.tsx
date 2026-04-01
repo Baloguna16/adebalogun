@@ -9,7 +9,7 @@ export const DonatePage = () => {
   };
 
   return (
-    <div className="gfm-page">
+    <div className={`gfm-page ${revealed ? 'gfm-page-revealed' : ''}`}>
       <div className={`gfm-campaign ${revealed ? 'gfm-melting' : ''}`}>
       {/* Top Nav */}
       <nav className="gfm-nav">
@@ -110,8 +110,8 @@ export const DonatePage = () => {
                   <div className="gfm-donor-info">
                     <div className="gfm-donor-name">Jake</div>
                     <div className="gfm-donor-detail"><span className="gfm-donor-amount">$50</span> · 2 hrs</div>
+                    <div className="gfm-donor-comment">"Get back to printing bro"</div>
                   </div>
-                  <div className="gfm-donor-comment">"Get back to printing bro"</div>
                 </div>
 
                 <div className="gfm-donor">
@@ -119,8 +119,8 @@ export const DonatePage = () => {
                   <div className="gfm-donor-info">
                     <div className="gfm-donor-name">Femi</div>
                     <div className="gfm-donor-detail"><span className="gfm-donor-amount">$40</span> · 5 hrs</div>
+                    <div className="gfm-donor-comment">"This is so sad lol"</div>
                   </div>
-                  <div className="gfm-donor-comment">"This is so sad lol"</div>
                 </div>
 
                 <div className="gfm-donor">
@@ -136,8 +136,8 @@ export const DonatePage = () => {
                   <div className="gfm-donor-info">
                     <div className="gfm-donor-name">Hugh Jazz</div>
                     <div className="gfm-donor-detail"><span className="gfm-donor-amount">$20</span> · 12 hrs</div>
+                    <div className="gfm-donor-comment">"Stay strong man"</div>
                   </div>
-                  <div className="gfm-donor-comment">"Stay strong man"</div>
                 </div>
 
                 <div className="gfm-donor">
@@ -153,8 +153,8 @@ export const DonatePage = () => {
                   <div className="gfm-donor-info">
                     <div className="gfm-donor-name">Lisa Chen</div>
                     <div className="gfm-donor-detail"><span className="gfm-donor-amount">$10</span> · 1 day</div>
+                    <div className="gfm-donor-comment">"Hope this helps!"</div>
                   </div>
-                  <div className="gfm-donor-comment">"Hope this helps!"</div>
                 </div>
               </div>
 
