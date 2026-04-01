@@ -11,7 +11,7 @@ import {
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CasinoIcon from '@mui/icons-material/Casino';
 
-const SITE_DOMAIN = 'adebalogun.me';
+const SITE_DOMAIN = 'www.adebalogun.me';
 
 const generateRandomSlug = (): string => {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
