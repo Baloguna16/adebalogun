@@ -1,12 +1,16 @@
+import { useState } from 'react';
 import './DonatePage.css';
 
 export const DonatePage = () => {
+  const [revealed, setRevealed] = useState(false);
+
   const handleReveal = () => {
-    // Will be implemented in Task 5
+    setRevealed(true);
   };
 
   return (
     <div className="gfm-page">
+      <div className={`gfm-campaign ${revealed ? 'gfm-melting' : ''}`}>
       {/* Top Nav */}
       <nav className="gfm-nav">
         <div className="gfm-nav-inner">
@@ -160,6 +164,16 @@ export const DonatePage = () => {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+      </div>
+
+      {/* Reveal Screen */}
+      <div className={`gfm-reveal ${revealed ? 'gfm-reveal-visible' : ''}`}>
+        <div className="gfm-reveal-content">
+          <h1 className="gfm-reveal-title">YOU'VE BEEN FOOL'D BIGTIME</h1>
+          <img src="/images/pax_artistica.png" alt="April Fools" className="gfm-reveal-img" />
+          <p className="gfm-reveal-subtitle">Happy April Fools :)</p>
         </div>
       </div>
     </div>

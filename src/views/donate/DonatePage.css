@@ -362,3 +362,115 @@
     position: static;
   }
 }
+
+/* Campaign wrapper — target of the melt animation */
+.gfm-campaign {
+  transition: transform 1.5s ease-in, opacity 1s ease-in;
+  transform-origin: top center;
+}
+
+.gfm-melting {
+  animation: meltAway 1.5s ease-in forwards;
+  pointer-events: none;
+}
+
+@keyframes meltAway {
+  0% {
+    transform: translateY(0) skewX(0deg) scaleX(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+  30% {
+    transform: translateY(20px) skewX(-2deg) scaleX(1.02);
+    opacity: 0.9;
+    filter: blur(1px);
+  }
+  60% {
+    transform: translateY(150px) skewX(3deg) scaleX(0.95);
+    opacity: 0.5;
+    filter: blur(3px);
+  }
+  100% {
+    transform: translateY(100vh) skewX(-5deg) scaleX(0.8);
+    opacity: 0;
+    filter: blur(8px);
+  }
+}
+
+/* Reveal screen */
+.gfm-reveal {
+  position: fixed;
+  inset: 0;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease-in 0.7s;
+}
+
+.gfm-reveal-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.gfm-reveal-content {
+  text-align: center;
+  padding: 24px;
+}
+
+.gfm-reveal-title {
+  font-family: "GoFundMe Sans", Trebuchet, Helvetica, Arial, sans-serif;
+  font-size: 48px;
+  font-weight: 900;
+  color: #CCF88E;
+  margin: 0 0 32px 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  animation: revealBounce 0.6s ease-out 1.2s both;
+}
+
+@keyframes revealBounce {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.gfm-reveal-img {
+  max-width: 400px;
+  width: 100%;
+  border-radius: 12px;
+  animation: revealBounce 0.6s ease-out 1.5s both;
+}
+
+.gfm-reveal-subtitle {
+  font-size: 24px;
+  color: #fff;
+  margin: 24px 0 0 0;
+  animation: revealBounce 0.6s ease-out 1.8s both;
+}
+
+/* Mobile reveal */
+@media (max-width: 768px) {
+  .gfm-reveal-title {
+    font-size: 32px;
+  }
+
+  .gfm-reveal-img {
+    max-width: 280px;
+  }
+
+  .gfm-reveal-subtitle {
+    font-size: 18px;
+  }
+}
