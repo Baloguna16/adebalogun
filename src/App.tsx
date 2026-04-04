@@ -33,8 +33,6 @@ const ToolsIndex = lazy(() => import('./views/tools/ToolsIndex').then(m => ({ de
 const MarkdownViewer = lazy(() => import('./views/tools/markdown-viewer/MarkdownViewer').then(m => ({ default: m.MarkdownViewer })));
 const GynOncMap = lazy(() => import('./views/projects/gyn-onc-map').then(m => ({ default: m.GynOncMap })));
 const WeddingBudget = lazy(() => import('./views/tools/wedding-budget/WeddingBudget').then(m => ({ default: m.WeddingBudget })));
-const ResearchIndex = lazy(() => import('./views/research/ResearchIndex').then(m => ({ default: m.ResearchIndex })));
-const ResearchPaper = lazy(() => import('./views/research/ResearchPaper').then(m => ({ default: m.ResearchPaper })));
 const DonatePage = lazy(() => import('./views/donate').then(m => ({ default: m.DonatePage })));
 const RickrollRedirect = lazy(() => import('./views/rickroll-redirect').then(m => ({ default: m.RickrollRedirect })));
 const RickrollGenerator = lazy(() => import('./views/tools/rickroll').then(m => ({ default: m.RickrollGenerator })));
@@ -112,8 +110,6 @@ const routes = createRoutesFromElements(
       <Route path="/tools/markdown-viewer" element={<MarkdownViewer />} />
       <Route path="/tools/wedding-budget" element={<WeddingBudget />} />
       <Route path="/tools/rickroll" element={<RickrollGenerator />} />
-      <Route path="/research" element={<ResearchIndex />} />
-      <Route path="/research/:slug" element={<ResearchPaper />} />
       <Route path="*" element={<NotFound />} />
     </Route>
   </>
