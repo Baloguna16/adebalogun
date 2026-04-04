@@ -29,8 +29,8 @@ export const ResearchPaper = () => {
     const load = async () => {
       try {
         const [manifestRes, mdRes] = await Promise.all([
-          fetch(`${process.env.PUBLIC_URL}/research/manifest.json`),
-          fetch(`${process.env.PUBLIC_URL}/research/papers/${slug}.md`),
+          fetch(`${process.env.PUBLIC_URL}/research-data/manifest.json`),
+          fetch(`${process.env.PUBLIC_URL}/research-data/papers/${slug}.md`),
         ]);
 
         if (manifestRes.ok) {
@@ -112,7 +112,7 @@ export const ResearchPaper = () => {
       </Box>
 
       {paper.hasAudio && (
-        <AudioPlayer src={`${process.env.PUBLIC_URL}/research/${paper.audioFile}`} />
+        <AudioPlayer src={`${process.env.PUBLIC_URL}/research-data/${paper.audioFile}`} />
       )}
 
       <Box

@@ -19,9 +19,9 @@ import { execSync } from 'child_process';
 // Config
 // ---------------------------------------------------------------------------
 const RESEARCH_DIR = path.join(os.homedir(), 'Documents', 'Research');
-const OUT_PAPERS_DIR = path.join(process.cwd(), 'public', 'research', 'papers');
-const OUT_AUDIO_DIR = path.join(process.cwd(), 'public', 'research', 'audio');
-const MANIFEST_PATH = path.join(process.cwd(), 'public', 'research', 'manifest.json');
+const OUT_PAPERS_DIR = path.join(process.cwd(), 'public', 'research-data', 'papers');
+const OUT_AUDIO_DIR = path.join(process.cwd(), 'public', 'research-data', 'audio');
+const MANIFEST_PATH = path.join(process.cwd(), 'public', 'research-data', 'manifest.json');
 const NO_AUDIO = process.argv.includes('--no-audio');
 const WORDS_PER_MINUTE = 200;
 const TTS_CHAR_LIMIT = 4096;

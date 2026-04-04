@@ -21,7 +21,7 @@ export const ResearchIndex = () => {
   const [activeCategory, setActiveCategory] = useState('All');
 
   useEffect(() => {
-    fetch(`${process.env.PUBLIC_URL}/research/manifest.json`)
+    fetch(`${process.env.PUBLIC_URL}/research-data/manifest.json`)
       .then(res => res.json())
       .then((data: ResearchManifest) => setManifest(data))
       .finally(() => setLoading(false));
