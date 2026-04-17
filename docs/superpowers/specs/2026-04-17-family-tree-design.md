@@ -40,9 +40,12 @@ Inherits the existing site aesthetic:
 
 ### Profile claiming
 
-- A user can claim an unclaimed profile by selecting it and verifying via their authenticated email
-- Once a profile is claimed, subsequent claim attempts by other emails are denied
-- Admin can override claims from the dashboard
+Claims work differently based on whether the profile is for a living or deceased person:
+
+- **Deceased profiles** (`death_year` present): claim is auto-granted to the first authenticated user. Subsequent claims are denied.
+- **Living profiles** (`death_year` null): claim is a *request* that goes to the admin for approval. The claimant sees "pending" until admin acts. This prevents impersonation — e.g., an estranged relative claiming your profile before you sign up.
+
+Admin can override or transfer any claim from the dashboard.
 
 ## Data Model
 
@@ -54,30 +57,51 @@ Inherits the existing site aesthetic:
 | id | uuid (PK) | |
 | first_name | text | Required |
 | last_name | text | Required |
-| birth_year | int | Required |
+| birth_year | int | Nullable — unknown for distant ancestors |
+| birth_year_approximate | boolean | Default false. True = "circa" display |
 | death_year | int | Nullable |
-| bio | text | Nullable, max 150 chars |
-| location | text | Nullable, private |
-| contact_info | text | Nullable, private |
+| bio | text | Nullable, max 280 chars |
 | photo_url | text | Nullable, Supabase storage URL |
-| claimed_by | uuid (FK → auth.users) | Nullable, the user who claimed this profile |
 | created_by | uuid (FK → auth.users) | The user who submitted this profile |
-| status | enum | `pending`, `approved`, `denied` |
+| submission_batch_id | uuid | Groups profiles submitted in the same session |
+| status | enum | `pending`, `approved`, `denied` — controls tree visibility only |
 | created_at | timestamptz | |
 | updated_at | timestamptz | |
+
+`status` controls whether the profile renders on the tree. It does NOT represent claim/ownership state — that lives in `profile_claims`.
+
+**profile_claims**
+| Column | Type | Notes |
+|--------|------|-------|
+| id | uuid (PK) | |
+| profile_id | uuid (FK → profiles, unique) | One active claim per profile |
+| claimant_id | uuid (FK → auth.users) | The user claiming this profile |
+| status | enum | `pending`, `approved`, `denied` |
+| created_at | timestamptz | |
+| resolved_at | timestamptz | Nullable — when admin acted |
+
+Deceased profiles (`death_year` present) auto-approve claims. Living profiles require admin approval. Only one claim can be active (pending or approved) per profile.
 
 **relationships**
 | Column | Type | Notes |
 |--------|------|-------|
 | id | uuid (PK) | |
-| person_id | uuid (FK → profiles) | |
-| related_to_id | uuid (FK → profiles) | |
-| relationship_type | enum | `parent`, `child`, `spouse` |
+| parent_id | uuid (FK → profiles) | The parent |
+| child_id | uuid (FK → profiles) | The child |
+| relationship_type | enum | `parent_child`, `spouse` |
+| subtype | text | Nullable — e.g., `adoptive`, `step`, `foster` |
+| start_year | int | Nullable — marriage year, adoption year, etc. |
+| end_year | int | Nullable — divorce year, etc. |
 | status | enum | `pending`, `approved`, `denied` |
+| submission_batch_id | uuid | Groups with profiles from the same session |
 | created_by | uuid (FK → auth.users) | |
 | created_at | timestamptz | |
 
-Relationships are stored directionally. A `parent` relationship from A→B means "A is a parent of B." The app derives siblings (shared parent), grandparents (parent's parent), etc. by traversal.
+Canonical storage directions:
+- **Parent-child**: always stored as `parent_id` → `child_id`. The app derives `child` and `sibling` (shared parent) by traversal.
+- **Spouse**: stored with the lower UUID as `parent_id` to prevent duplicate rows. Both directions are symmetric.
+
+Subtypes allow distinguishing biological, adoptive, and step relationships. `start_year`/`end_year` on spouse relationships distinguish current from former marriages.
 
 **admin_users**
 | Column | Type | Notes |
@@ -96,15 +120,16 @@ Simple table that marks which authenticated users have admin privileges. Initial
 | location | text | Nullable |
 | contact_info | text | Nullable |
 
-This separation allows RLS to restrict access: only the profile owner (`claimed_by`) and admins can read `private_fields`. The main `profiles` table is readable by all approved users.
+This separation allows RLS to restrict access: only the profile's approved claimant and admins can read `private_fields`. The main `profiles` table is readable by all approved users.
 
 ### Row-Level Security
 
-- **profiles**: Approved users can read all approved profiles.
-- **private_fields**: Only the profile owner (claimed_by matches auth.uid()) and admin users can select.
+- **profiles**: Approved users (those with an approved claim in `profile_claims`) can read all approved profiles.
+- **profile_claims**: Users can read their own claims. Admin can read all.
+- **private_fields**: Only users with an approved claim on that profile (`profile_claims.claimant_id = auth.uid() AND status = 'approved'`) and admin users can select.
 - **relationships**: Approved users can read all approved relationships.
-- **Inserts**: Any authenticated user can insert profiles and relationships with `status = 'pending'`.
-- **Admin**: Admin users can read/update all rows (approve, deny, edit).
+- **Inserts**: Any authenticated user can insert profiles, relationships, and claims with `status = 'pending'`.
+- **Admin**: Admin users can read/update all rows (approve, deny, edit, transfer claims).
 
 ### Bootstrapping
 
@@ -120,6 +145,14 @@ Use **React Flow** (`@xyflow/react`) for the tree canvas. It provides:
 - Edge routing for relationship lines
 - Minimap plugin
 - Fits-view and zoom controls
+
+### Layout engine
+
+Use **elkjs** (`elkjs`) for automatic node positioning. Elk handles DAGs well (cousin marriages create shared ancestors, making the graph non-tree), supports hierarchical/layered layouts suited to generational structure, and allows per-node constraints for spouse placement. The layout runs client-side in a web worker to avoid blocking the UI on large trees.
+
+### Mobile
+
+On small screens (< 768px), the tree renders in focused view only — no zoom-out to canvas. Navigation is click-to-recenter and search. This avoids the pinch-zoom pain of pan-zoom canvases on phones. The mini-map is hidden on mobile.
 
 ### Zoom behavior
 
@@ -153,7 +186,7 @@ Use **React Flow** (`@xyflow/react`) for the tree canvas. It provides:
 ### Adding yourself (new user)
 
 1. After magic link login, new user sees: "Welcome! To explore the family tree, tell us about yourself."
-2. Form fields: first name, last name, birth year, photo (optional upload), bio (optional, 150 char max), location (optional, marked as private), contact info (optional, marked as private)
+2. Form fields: first name, last name, birth year (optional, with "approximate" checkbox), photo (optional upload), bio (optional, 280 char max), location (optional, marked as private), contact info (optional, marked as private)
 3. Relationship step: "How are you related to someone on the tree?"
    - Shows a searchable list of approved profiles
    - User selects a person and a relationship type (e.g., "I am the child of [person]", "I am the spouse of [person]", "I am the parent of [person]")
@@ -167,17 +200,19 @@ After the initial submission (or for already-approved users):
 2. Same profile form (first name, last name, birth year, etc.)
 3. Relationship step: relate to someone already on the tree OR someone submitted in the current session (chaining)
    - Chaining: if user added "Mom" and now adds "Grandma," they can say "Grandma is the parent of Mom" even though Mom is still pending
+   - All profiles/relationships in a chain share a `submission_batch_id` for admin context
 4. Each submission is independent for approval — admin can approve some and deny others from a batch
+5. **Chaining orphans**: if admin denies a middle link (e.g., denies "Mom" but approves "Grandma"), any relationship that references the denied profile is also denied. Admin sees a warning before denying a profile that has dependents in the same batch.
 
 ### Relationship types
 
-Stored relationships: `parent`, `child`, `spouse`. The submission form presents user-friendly language:
-- "I am the **child** of [person]"
-- "I am the **parent** of [person]"
-- "I am the **spouse** of [person]"
-- "[New person] is the **child** of [person]"
-- "[New person] is the **parent** of [person]"
-- "[New person] is the **spouse** of [person]"
+The form presents user-friendly language; the app maps to canonical storage direction behind the scenes:
+- "I am the **child** of [person]" → `parent_child` with person as `parent_id`
+- "I am the **parent** of [person]" → `parent_child` with me as `parent_id`
+- "I am the **spouse** of [person]" → `spouse` with lower UUID as `parent_id`
+- Same patterns for "[New person] is the **child/parent/spouse** of [person]"
+
+Optional subtype dropdown (default: none): `biological`, `adoptive`, `step`, `foster`. Optional start/end year for marriages.
 
 ## Contact/Location Request
 
@@ -206,14 +241,21 @@ Route: `/family/admin`. Only visible/accessible to users in the `admin_users` ta
 - **Deny** button: sets status to `denied`, profile does not appear on tree
 - **Edit** button: admin can correct names, dates, relationships before approving
 - Batch operations: approve/deny multiple at once
-- Submissions grouped by submitter and session for context ("Ade submitted 3 people: Mom → Grandma → Great-grandma")
+- Submissions grouped by `submission_batch_id` for context ("Ade submitted 3 people: Mom → Grandma → Great-grandma")
+- Warning when denying a profile that has dependents in the same batch (chaining orphan cascade)
+
+### Claim management
+
+- View pending claims for living profiles, approve or deny
+- Transfer an existing claim to a different user (handles email changes)
+- Override/revoke approved claims
 
 ### Tree management
 
 - Admin can edit any approved profile
 - Admin can remove profiles (soft delete)
 - Admin can reassign or remove relationships
-- Admin can override profile claims
+- **Merge profiles**: when duplicate submissions exist for the same person, admin can merge them — pick the primary, transfer relationships from the duplicate, soft-delete the duplicate
 
 ## File Structure
 
@@ -260,6 +302,7 @@ All other states (tree view, submission, pending) are handled within `FamilyPage
 
 - `@supabase/supabase-js` — Supabase client
 - `@xyflow/react` — Tree visualization (React Flow)
+- `elkjs` — Hierarchical graph layout engine (runs in web worker)
 
 ## Environment Variables (new)
 
@@ -279,3 +322,6 @@ All other states (tree view, submission, pending) are handled within `FamilyPage
 - Family tree statistics or analytics
 - Multiple family trees per instance
 - Notification system beyond email requests
+- Audit log / profile edit history — valuable for contested family facts, but deferred to v2
+- Deep accessibility for the canvas view — React Flow canvases are hostile to screen readers; focused view is more accessible by default, but full a11y audit is a v2 concern
+- Email change migration — if a user changes their email, admin can transfer their claim manually from the dashboard. Automated email-change flow deferred to v2
