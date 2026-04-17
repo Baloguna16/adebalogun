@@ -80,14 +80,16 @@ Admin can override or transfer any claim from the dashboard.
 | created_at | timestamptz | |
 | resolved_at | timestamptz | Nullable — when admin acted |
 
-Deceased profiles (`death_year` present) auto-approve claims. Living profiles require admin approval. Only one claim can be active (pending or approved) per profile.
+Claims can only be created against profiles with `status = approved`. Living profiles (`death_year` null) require admin approval for claims. Deceased profiles (`death_year` present) auto-approve claims — but only after the profile itself has been admin-approved, so the admin implicitly vets the death year before auto-approval fires. Only one claim can be active (pending or approved) per profile.
+
+**Self-submission**: when a new user submits their own profile, the system creates both a pending profile and an associated pending claim. When admin approves the profile, the claim auto-promotes to approved (deceased) or remains pending for admin review (living).
 
 **relationships**
 | Column | Type | Notes |
 |--------|------|-------|
 | id | uuid (PK) | |
-| parent_id | uuid (FK → profiles) | The parent |
-| child_id | uuid (FK → profiles) | The child |
+| person_a_id | uuid (FK → profiles) | For parent_child: the parent. For spouse: lower UUID. |
+| person_b_id | uuid (FK → profiles) | For parent_child: the child. For spouse: higher UUID. |
 | relationship_type | enum | `parent_child`, `spouse` |
 | subtype | text | Nullable — e.g., `adoptive`, `step`, `foster` |
 | start_year | int | Nullable — marriage year, adoption year, etc. |
@@ -98,8 +100,8 @@ Deceased profiles (`death_year` present) auto-approve claims. Living profiles re
 | created_at | timestamptz | |
 
 Canonical storage directions:
-- **Parent-child**: always stored as `parent_id` → `child_id`. The app derives `child` and `sibling` (shared parent) by traversal.
-- **Spouse**: stored with the lower UUID as `parent_id` to prevent duplicate rows. Both directions are symmetric.
+- **Parent-child**: `person_a_id` is the parent, `person_b_id` is the child. The app derives `child` and `sibling` (shared parent) by traversal.
+- **Spouse**: `person_a_id` is the lower UUID, `person_b_id` is the higher UUID — prevents duplicate rows. Both directions are symmetric.
 
 Subtypes allow distinguishing biological, adoptive, and step relationships. `start_year`/`end_year` on spouse relationships distinguish current from former marriages.
 
@@ -122,18 +124,28 @@ Simple table that marks which authenticated users have admin privileges. Initial
 
 This separation allows RLS to restrict access: only the profile's approved claimant and admins can read `private_fields`. The main `profiles` table is readable by all approved users.
 
+### Access model
+
+To browse the tree, a user must have an approved profile that they have claimed (approved claim in `profile_claims`). There is no "view-only" access without a profile — if a cousin wants to add Aunt Linda but doesn't want a profile for themselves, they must first submit their own profile and get approved.
+
 ### Row-Level Security
 
-- **profiles**: Approved users (those with an approved claim in `profile_claims`) can read all approved profiles.
+- **profiles**: Approved users (those with an approved claim) can read all approved profiles. Users can also read their own submitted profiles regardless of status (so they can see pending/denied submissions).
 - **profile_claims**: Users can read their own claims. Admin can read all.
-- **private_fields**: Only users with an approved claim on that profile (`profile_claims.claimant_id = auth.uid() AND status = 'approved'`) and admin users can select.
-- **relationships**: Approved users can read all approved relationships.
-- **Inserts**: Any authenticated user can insert profiles, relationships, and claims with `status = 'pending'`.
+- **private_fields**: Only users with an approved claim on that specific profile (`profile_claims.claimant_id = auth.uid() AND status = 'approved'`) and admin users can select.
+- **relationships**: Approved users can read all approved relationships. Users can also read relationships they submitted regardless of status.
+- **Inserts**: Any authenticated user can insert profiles and relationships with `status = 'pending'`. Claims can only be inserted against profiles with `status = 'approved'`.
 - **Admin**: Admin users can read/update all rows (approve, deny, edit, transfer claims).
 
 ### Bootstrapping
 
-The admin (site owner) seeds the initial tree by inserting their own profile directly in Supabase (status: `approved`, claimed_by: their auth user ID) and optionally a few ancestor profiles. This gives the first real users someone to relate to. The admin dashboard is available from the start for managing subsequent submissions.
+The admin (site owner) seeds the initial tree directly in Supabase:
+
+1. Insert their own profile with `status = approved`
+2. Insert a `profile_claims` row with `status = approved`, linking the admin's auth user ID to that profile
+3. Optionally insert a few ancestor profiles (`status = approved`, no claims — deceased ancestors don't need claimants)
+
+This gives the first real users someone to relate to. The admin dashboard is available from the start for managing subsequent submissions.
 
 ## Tree Visualization
 
@@ -207,9 +219,9 @@ After the initial submission (or for already-approved users):
 ### Relationship types
 
 The form presents user-friendly language; the app maps to canonical storage direction behind the scenes:
-- "I am the **child** of [person]" → `parent_child` with person as `parent_id`
-- "I am the **parent** of [person]" → `parent_child` with me as `parent_id`
-- "I am the **spouse** of [person]" → `spouse` with lower UUID as `parent_id`
+- "I am the **child** of [person]" → `parent_child` with person as `person_a_id`, me as `person_b_id`
+- "I am the **parent** of [person]" → `parent_child` with me as `person_a_id`, person as `person_b_id`
+- "I am the **spouse** of [person]" → `spouse` with lower UUID as `person_a_id`
 - Same patterns for "[New person] is the **child/parent/spouse** of [person]"
 
 Optional subtype dropdown (default: none): `biological`, `adoptive`, `step`, `foster`. Optional start/end year for marriages.
@@ -255,7 +267,7 @@ Route: `/family/admin`. Only visible/accessible to users in the `admin_users` ta
 - Admin can edit any approved profile
 - Admin can remove profiles (soft delete)
 - Admin can reassign or remove relationships
-- **Merge profiles**: when duplicate submissions exist for the same person, admin can merge them — pick the primary, transfer relationships from the duplicate, soft-delete the duplicate
+- **Merge profiles**: when duplicate submissions exist for the same person, admin can merge them — pick the primary, transfer relationships from the duplicate, soft-delete the duplicate. If both profiles have claims: keep the claim on the primary, discard the claim on the duplicate and notify the displaced claimant via their email.
 
 ## File Structure
 
