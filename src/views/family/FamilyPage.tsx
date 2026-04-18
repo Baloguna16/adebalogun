@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, Fab } from '@mui/material';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { useAuth } from './hooks/useAuth';
 import { LoginPage } from './auth/LoginPage';
 import { PendingPage } from './auth/PendingPage';
@@ -31,6 +32,14 @@ export function FamilyPage() {
       if (showSubmission) {
         return <SubmissionFlow isSelf={false} onComplete={() => setShowSubmission(false)} />;
       }
-      return <FamilyTree focusProfileId={accessState.profileId} />;
+      return (
+        <Box sx={{ position: 'relative' }}>
+          <FamilyTree focusProfileId={accessState.profileId} onSignOut={signOut} />
+          <Fab color="primary" sx={{ position: 'fixed', bottom: 24, right: 24 }}
+            onClick={() => setShowSubmission(true)}>
+            <PersonAddIcon />
+          </Fab>
+        </Box>
+      );
   }
 }
