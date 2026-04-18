@@ -8,7 +8,7 @@ import {
   useViewport,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Button, useMediaQuery, useTheme } from '@mui/material';
 import { ProfileNode } from './ProfileNode';
 import { CompactNode } from './CompactNode';
 import { RelationshipEdge } from './RelationshipEdge';
@@ -19,6 +19,7 @@ const ZOOM_THRESHOLD = 0.6;
 
 interface FamilyTreeProps {
   focusProfileId: string;
+  onSignOut?: () => void;
 }
 
 const nodeTypes = {
@@ -30,7 +31,8 @@ const edgeTypes = {
   relationshipEdge: RelationshipEdge,
 };
 
-function FamilyTreeInner({ focusProfileId }: FamilyTreeProps) {
+function FamilyTreeInner(props: FamilyTreeProps) {
+  const { focusProfileId } = props;
   const { nodes, edges, loading, treeData } = useFamilyTree(focusProfileId);
   const { fitView, setCenter, getZoom } = useReactFlow();
   const { zoom } = useViewport();
@@ -83,6 +85,9 @@ function FamilyTreeInner({ focusProfileId }: FamilyTreeProps) {
   return (
     <Box sx={{ width: '100%', height: 'calc(100vh - 140px)', position: 'relative' }}>
       <TreeSearch profiles={treeData.profiles} onSelect={handleSearchSelect} />
+      <Box sx={{ position: 'absolute', top: 16, right: 16, zIndex: 10 }}>
+        <Button variant="outlined" size="small" onClick={props.onSignOut}>Sign out</Button>
+      </Box>
       <ReactFlow
         nodes={displayNodes}
         edges={edges}
@@ -118,7 +123,7 @@ function FamilyTreeInner({ focusProfileId }: FamilyTreeProps) {
 export function FamilyTree(props: FamilyTreeProps) {
   return (
     <ReactFlowProvider>
-      <FamilyTreeInner {...props} />
+      <FamilyTreeInner focusProfileId={props.focusProfileId} onSignOut={props.onSignOut} />
     </ReactFlowProvider>
   );
 }
