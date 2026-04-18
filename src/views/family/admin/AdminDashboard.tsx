@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
-  Container, Typography, Box, Tabs, Tab, Button, Alert, CircularProgress,
+  Container, Typography, Box, Tabs, Tab, Button, Alert, CircularProgress, Autocomplete, TextField,
 } from '@mui/material';
 import { useAuth } from '../hooks/useAuth';
 import { supabase } from '../supabaseClient';
@@ -17,6 +17,8 @@ export function AdminDashboard() {
   const [claims, setClaims] = useState<ProfileClaim[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingProfile, setEditingProfile] = useState<Profile | null>(null);
+  const [mergePrimary, setMergePrimary] = useState<Profile | null>(null);
+  const [mergeDuplicate, setMergeDuplicate] = useState<Profile | null>(null);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -106,6 +108,16 @@ export function AdminDashboard() {
     fetchData();
   };
 
+  const handleMerge = async (primaryId: string, duplicateId: string) => {
+    await supabase.from('relationships').update({ person_a_id: primaryId }).eq('person_a_id', duplicateId);
+    await supabase.from('relationships').update({ person_b_id: primaryId }).eq('person_b_id', duplicateId);
+    await supabase.from('profile_claims')
+      .update({ status: 'denied', resolved_at: new Date().toISOString() })
+      .eq('profile_id', duplicateId);
+    await supabase.from('profiles').update({ status: 'denied' }).eq('id', duplicateId);
+    fetchData();
+  };
+
   const hasDependents = (profileId: string) => {
     return relationships.some(
       r => r.status === 'pending' &&
@@ -123,6 +135,7 @@ export function AdminDashboard() {
       <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 3 }}>
         <Tab label={`Submissions (${pendingProfiles.length})`} />
         <Tab label={`Claims (${pendingClaims.length})`} />
+        <Tab label="Manage" />
       </Tabs>
 
       {loading && <CircularProgress />}
@@ -189,6 +202,46 @@ export function AdminDashboard() {
           )}
         </>
       )}
+
+      {!loading && tab === 2 && (() => {
+        const approvedProfiles = profiles.filter(p => p.status === 'approved');
+        const options = approvedProfiles.map(p => ({ id: p.id, label: `${p.first_name} ${p.last_name}` }));
+        return (
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 480 }}>
+            <Typography variant="h6">Merge Duplicate Profiles</Typography>
+            <Autocomplete
+              options={options}
+              getOptionLabel={(o) => o.label}
+              value={mergePrimary ? { id: mergePrimary.id, label: `${mergePrimary.first_name} ${mergePrimary.last_name}` } : null}
+              onChange={(_, v) => setMergePrimary(v ? (approvedProfiles.find(p => p.id === v.id) ?? null) : null)}
+              renderInput={(params) => <TextField {...params} label="Primary profile (keep)" size="small" />}
+              isOptionEqualToValue={(o, v) => o.id === v.id}
+            />
+            <Autocomplete
+              options={options}
+              getOptionLabel={(o) => o.label}
+              value={mergeDuplicate ? { id: mergeDuplicate.id, label: `${mergeDuplicate.first_name} ${mergeDuplicate.last_name}` } : null}
+              onChange={(_, v) => setMergeDuplicate(v ? (approvedProfiles.find(p => p.id === v.id) ?? null) : null)}
+              renderInput={(params) => <TextField {...params} label="Duplicate profile (remove)" size="small" />}
+              isOptionEqualToValue={(o, v) => o.id === v.id}
+            />
+            <Button
+              variant="contained"
+              color="warning"
+              disabled={!mergePrimary || !mergeDuplicate || mergePrimary.id === mergeDuplicate.id}
+              onClick={() => {
+                if (mergePrimary && mergeDuplicate) {
+                  handleMerge(mergePrimary.id, mergeDuplicate.id);
+                  setMergePrimary(null);
+                  setMergeDuplicate(null);
+                }
+              }}
+            >
+              Merge
+            </Button>
+          </Box>
+        );
+      })()}
 
       {editingProfile && (
         <ProfileEditor
