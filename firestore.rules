@@ -1,0 +1,62 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() &&
+        exists(/databases/$(database)/documents/adminUsers/$(request.auth.uid));
+    }
+
+    function isApprovedUser() {
+      return isSignedIn() &&
+        getAfter(/databases/$(database)/documents/profileClaims/$(request.auth.uid)) != null ||
+        isAdmin();
+    }
+
+    // Profiles: approved users can read approved profiles, anyone authed can create pending
+    match /profiles/{profileId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.status == 'pending';
+      allow update: if isAdmin();
+    }
+
+    // Profile claims
+    match /profileClaims/{claimId} {
+      allow read: if isSignedIn() && (
+        resource.data.claimantId == request.auth.uid || isAdmin()
+      );
+      allow create: if isSignedIn() && request.resource.data.status == 'pending';
+      allow update: if isAdmin();
+    }
+
+    // Relationships
+    match /relationships/{relId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.status == 'pending';
+      allow update: if isAdmin();
+    }
+
+    // Private fields: only claimant and admin
+    match /privateFields/{docId} {
+      allow read: if isAdmin();
+      allow create: if isSignedIn();
+      allow update: if isAdmin();
+    }
+
+    // Admin users
+    match /adminUsers/{userId} {
+      allow read: if isSignedIn();
+    }
+
+    // Contact requests
+    match /contactRequests/{requestId} {
+      allow read: if isAdmin();
+      allow create: if isSignedIn();
+    }
+  }
+}

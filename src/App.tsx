@@ -29,6 +29,16 @@ const PostPage = lazy(() => import('./views/blog/post/PostPage').then(m => ({ de
 const NotFound = lazy(() => import('./views/NotFound').then(m => ({ default: m.NotFound })));
 const GameOfLife = lazy(() => import('./views/life/GameOfLife').then(m => ({ default: m.GameOfLife })));
 const HubbubPage = lazy(() => import('./views/projects/hubbub').then(m => ({ default: m.HubbubPage })));
+const ToolsIndex = lazy(() => import('./views/tools/ToolsIndex').then(m => ({ default: m.ToolsIndex })));
+const MarkdownViewer = lazy(() => import('./views/tools/markdown-viewer/MarkdownViewer').then(m => ({ default: m.MarkdownViewer })));
+const GynOncMap = lazy(() => import('./views/projects/gyn-onc-map').then(m => ({ default: m.GynOncMap })));
+const WeddingBudget = lazy(() => import('./views/tools/wedding-budget/WeddingBudget').then(m => ({ default: m.WeddingBudget })));
+const DonatePage = lazy(() => import('./views/donate').then(m => ({ default: m.DonatePage })));
+const RickrollRedirect = lazy(() => import('./views/rickroll-redirect').then(m => ({ default: m.RickrollRedirect })));
+const RickrollGenerator = lazy(() => import('./views/tools/rickroll').then(m => ({ default: m.RickrollGenerator })));
+const FamilyPage = lazy(() => import('./views/family').then(m => ({ default: m.FamilyPage })));
+const AuthCallback = lazy(() => import('./views/family/auth/AuthCallback').then(m => ({ default: m.AuthCallback })));
+const AdminDashboard = lazy(() => import('./views/family/admin/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
 
 const Loading = () => (
   <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
@@ -78,25 +88,37 @@ const AppProviderLayout = () => {
 
 
 const routes = createRoutesFromElements(
-  <Route element={<AppProviderLayout />}>
+  <>
+    <Route path="/donate" element={
+      <Suspense fallback={<Loading />}>
+        <DonatePage />
+      </Suspense>
+    } />
+    <Route path="/r/:slug" element={
+      <Suspense fallback={<Loading />}>
+        <RickrollRedirect />
+      </Suspense>
+    } />
 
-    <Route path="/" element={<MainPage />} />
-
-    <Route path="/projects" element={<ProjectPosts />} />
-
-    <Route path="/projects/nyc-water" element={<WaterMap />} />
-
-    <Route path="/projects/hubbub" element={<HubbubPage />} />
-
-    <Route path="/blog" element={<BlogPosts />} />
-
-    <Route path="/blog/:slug" element={<PostPage />} />
-
-    <Route path="/life" element={<GameOfLife />} />
-
-    <Route path="*" element={<NotFound />} />
-
-  </Route>
+    <Route element={<AppProviderLayout />}>
+      <Route path="/" element={<MainPage />} />
+      <Route path="/projects" element={<ProjectPosts />} />
+      <Route path="/projects/nyc-water" element={<WaterMap />} />
+      <Route path="/projects/hubbub" element={<HubbubPage />} />
+      <Route path="/projects/gyn-onc-fellowships" element={<GynOncMap />} />
+      <Route path="/blog" element={<BlogPosts />} />
+      <Route path="/blog/:slug" element={<PostPage />} />
+      <Route path="/life" element={<GameOfLife />} />
+      <Route path="/tools" element={<ToolsIndex />} />
+      <Route path="/tools/markdown-viewer" element={<MarkdownViewer />} />
+      <Route path="/tools/wedding-budget" element={<WeddingBudget />} />
+      <Route path="/tools/rickroll" element={<RickrollGenerator />} />
+      <Route path="/family" element={<FamilyPage />} />
+      <Route path="/family/auth/callback" element={<AuthCallback />} />
+      <Route path="/family/admin" element={<AdminDashboard />} />
+      <Route path="*" element={<NotFound />} />
+    </Route>
+  </>
 );
 
 

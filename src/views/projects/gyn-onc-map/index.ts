@@ -1,0 +1,1 @@
+export { GynOncMap } from './GynOncMap';

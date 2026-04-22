@@ -1,0 +1,482 @@
+/* GoFundMe clone styles */
+.gfm-page {
+  font-family: "GoFundMe Sans", Trebuchet, Helvetica, Arial, sans-serif;
+  background: #fff;
+  color: #232323;
+  min-height: 100vh;
+}
+
+.gfm-nav {
+  border-bottom: 1px solid #e4e4e4;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.gfm-nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+}
+
+.gfm-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gfm-wordmark {
+  font-size: 18px;
+  font-weight: 900;
+  color: #274A34;
+  letter-spacing: -0.5px;
+}
+
+.gfm-nav-center {
+  flex: 1;
+  max-width: 400px;
+  margin: 0 24px;
+}
+
+.gfm-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f4f4f4;
+  border-radius: 9999px;
+  padding: 8px 16px;
+}
+
+.gfm-search-text {
+  color: #999;
+  font-size: 14px;
+}
+
+.gfm-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.gfm-nav-link {
+  font-size: 14px;
+  font-weight: 500;
+  color: #232323;
+  cursor: pointer;
+}
+
+.gfm-nav-start-btn {
+  background: #274A34;
+  color: #CCF88E;
+  border: none;
+  border-radius: 9999px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* Hide nav extras on mobile */
+@media (max-width: 768px) {
+  .gfm-nav-center,
+  .gfm-nav-right .gfm-nav-link {
+    display: none;
+  }
+}
+
+.gfm-body {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.gfm-content {
+  display: flex;
+  gap: 32px;
+}
+
+.gfm-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.gfm-sidebar {
+  width: 376px;
+  flex-shrink: 0;
+}
+
+.gfm-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: #232323;
+  margin: 0 0 16px 0;
+  line-height: 1.3;
+}
+
+.gfm-hero {
+  margin-bottom: 24px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.gfm-hero-img {
+  width: 100%;
+  display: block;
+  border-radius: 10px;
+}
+
+.gfm-organizer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.gfm-organizer-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.gfm-organizer-info {
+  font-size: 14px;
+  color: #666;
+}
+
+.gfm-organizer-name {
+  font-weight: 700;
+  color: #232323;
+}
+
+.gfm-divider {
+  border: none;
+  border-top: 1px solid #e4e4e4;
+  margin: 24px 0;
+}
+
+.gfm-story {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #232323;
+}
+
+.gfm-story p {
+  margin: 0 0 16px 0;
+}
+
+.gfm-reactions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.gfm-reaction {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.gfm-reaction-count {
+  font-size: 14px;
+  color: #666;
+  margin-left: 8px;
+}
+
+.gfm-protection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #274A34;
+  font-weight: 500;
+}
+
+.gfm-donation-card {
+  border: 1px solid #e4e4e4;
+  border-radius: 10px;
+  padding: 24px;
+  position: sticky;
+  top: 80px;
+}
+
+.gfm-raised {
+  margin-bottom: 8px;
+}
+
+.gfm-raised-amount {
+  font-size: 22px;
+  font-weight: 900;
+  color: #232323;
+}
+
+.gfm-raised-goal {
+  font-size: 14px;
+  color: #666;
+}
+
+.gfm-progress-track {
+  height: 6px;
+  background: #e4e4e4;
+  border-radius: 3px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.gfm-progress-fill {
+  height: 100%;
+  background: #CCF88E;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.gfm-donation-count {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.gfm-share-btn {
+  width: 100%;
+  padding: 12px;
+  background: #274A34;
+  color: #CCF88E;
+  border: none;
+  border-radius: 9999px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 10px;
+  font-family: inherit;
+}
+
+.gfm-donate-btn {
+  width: 100%;
+  padding: 12px;
+  background: #CCF88E;
+  color: #274A34;
+  border: none;
+  border-radius: 9999px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 20px;
+  font-family: inherit;
+}
+
+.gfm-share-btn:hover,
+.gfm-donate-btn:hover {
+  opacity: 0.9;
+}
+
+.gfm-donor-list {
+  border-top: 1px solid #e4e4e4;
+  padding-top: 16px;
+}
+
+.gfm-donor-list-header {
+  font-size: 14px;
+  font-weight: 700;
+  color: #232323;
+  margin-bottom: 16px;
+}
+
+.gfm-donor {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.gfm-donor-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e4e4e4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  flex-shrink: 0;
+}
+
+.gfm-donor-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.gfm-donor-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #232323;
+}
+
+.gfm-donor-detail {
+  font-size: 13px;
+  color: #666;
+}
+
+.gfm-donor-amount {
+  font-weight: 600;
+  color: #232323;
+}
+
+.gfm-donor-comment {
+  font-size: 13px;
+  color: #666;
+  font-style: italic;
+  margin-top: 2px;
+  width: 100%;
+}
+
+.gfm-card-footer {
+  border-top: 1px solid #e4e4e4;
+  padding-top: 16px;
+  display: flex;
+  gap: 16px;
+}
+
+.gfm-card-meta {
+  font-size: 12px;
+  color: #999;
+}
+
+/* Mobile: stack columns */
+@media (max-width: 768px) {
+  .gfm-content {
+    flex-direction: column;
+  }
+
+  .gfm-sidebar {
+    width: 100%;
+  }
+
+  .gfm-donation-card {
+    position: static;
+  }
+}
+
+.gfm-page-revealed {
+  background: #111;
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* Campaign wrapper — target of the melt animation */
+.gfm-campaign {
+  transition: transform 1.5s ease-in, opacity 1s ease-in;
+  transform-origin: top center;
+}
+
+.gfm-melting {
+  animation: meltAway 1.5s ease-in forwards;
+  pointer-events: none;
+}
+
+@keyframes meltAway {
+  0% {
+    transform: translateY(0) skewX(0deg) scaleX(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+  30% {
+    transform: translateY(20px) skewX(-2deg) scaleX(1.02);
+    opacity: 0.9;
+    filter: blur(1px);
+  }
+  60% {
+    transform: translateY(150px) skewX(3deg) scaleX(0.95);
+    opacity: 0.5;
+    filter: blur(3px);
+  }
+  100% {
+    transform: translateY(100vh) skewX(-5deg) scaleX(0.8);
+    opacity: 0;
+    filter: blur(8px);
+  }
+}
+
+/* Reveal screen */
+.gfm-reveal {
+  position: fixed;
+  inset: 0;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease-in 0.7s;
+}
+
+.gfm-reveal-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.gfm-reveal-content {
+  text-align: center;
+  padding: 24px;
+}
+
+.gfm-reveal-title {
+  font-family: "GoFundMe Sans", Trebuchet, Helvetica, Arial, sans-serif;
+  font-size: 48px;
+  font-weight: 900;
+  color: #CCF88E;
+  margin: 0 0 32px 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  animation: revealBounce 0.6s ease-out 1.2s both;
+}
+
+@keyframes revealBounce {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.gfm-reveal-img {
+  max-width: 400px;
+  width: 100%;
+  border-radius: 12px;
+  animation: revealBounce 0.6s ease-out 1.5s both;
+}
+
+.gfm-reveal-subtitle {
+  font-size: 24px;
+  color: #fff;
+  margin: 24px 0 0 0;
+  animation: revealBounce 0.6s ease-out 1.8s both;
+}
+
+/* Mobile reveal */
+@media (max-width: 768px) {
+  .gfm-reveal-title {
+    font-size: 32px;
+  }
+
+  .gfm-reveal-img {
+    max-width: 280px;
+  }
+
+  .gfm-reveal-subtitle {
+    font-size: 18px;
+  }
+}

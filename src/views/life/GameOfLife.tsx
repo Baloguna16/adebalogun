@@ -29,8 +29,6 @@ const countNeighbors = (grid: boolean[][], row: number, col: number): number => 
 };
 
 const nextGeneration = (grid: boolean[][]): boolean[][] => {
-  const rows = grid.length;
-  const cols = grid[0].length;
   return grid.map((rowArr, r) =>
     rowArr.map((alive, c) => {
       const neighbors = countNeighbors(grid, r, c);
