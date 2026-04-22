@@ -4,12 +4,12 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY!,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN!,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID!,
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET!,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID!,
-  appId: process.env.REACT_APP_FIREBASE_APP_ID!,
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY || 'AIzaSyCG29-nDBYpHoa2__k7mjPaLZ87JAPD5SM',
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN || 'adebalogun-me.firebaseapp.com',
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID || 'adebalogun-me',
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET || 'adebalogun-me.firebasestorage.app',
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID || '497820626600',
+  appId: process.env.REACT_APP_FIREBASE_APP_ID || '1:497820626600:web:fc28475237c9521d151c9d',
 };
 
 const app = initializeApp(firebaseConfig);
