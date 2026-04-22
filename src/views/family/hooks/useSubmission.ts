@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { supabase } from '../supabaseClient';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { auth, db, storage } from '../firebaseConfig';
 import { ProfileFormData } from '../submission/ProfileForm';
 import { RelationshipFormData } from '../submission/RelationshipPicker';
 import { RelationshipType } from '../types';
@@ -26,83 +28,76 @@ export function useSubmission() {
     setError(null);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = auth.currentUser;
       if (!user) throw new Error('Not authenticated');
 
       let photoUrl: string | null = null;
       if (profileData.photo) {
         const ext = profileData.photo.name.split('.').pop();
-        const path = `${user.id}/${uuidv4()}.${ext}`;
-        const { error: uploadError } = await supabase.storage
-          .from('photos')
-          .upload(path, profileData.photo);
-        if (uploadError) throw uploadError;
-        const { data: { publicUrl } } = supabase.storage
-          .from('photos')
-          .getPublicUrl(path);
-        photoUrl = publicUrl;
+        const path = `photos/${user.uid}/${uuidv4()}.${ext}`;
+        const storageRef = ref(storage, path);
+        await uploadBytes(storageRef, profileData.photo);
+        photoUrl = await getDownloadURL(storageRef);
       }
 
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          first_name: profileData.first_name,
-          last_name: profileData.last_name,
-          birth_year: profileData.birth_year,
-          birth_year_approximate: profileData.birth_year_approximate,
-          death_year: profileData.death_year,
-          bio: profileData.bio || null,
-          photo_url: photoUrl,
-          created_by: user.id,
-          submission_batch_id: batchId,
-          status: 'pending',
-        })
-        .select()
-        .single();
-
-      if (profileError) throw profileError;
+      const profileRef = await addDoc(collection(db, 'profiles'), {
+        firstName: profileData.first_name,
+        lastName: profileData.last_name,
+        birthYear: profileData.birth_year,
+        birthYearApproximate: profileData.birth_year_approximate,
+        deathYear: profileData.death_year,
+        bio: profileData.bio || null,
+        photoUrl,
+        createdBy: user.uid,
+        submissionBatchId: batchId,
+        status: 'pending',
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
 
       if (profileData.location || profileData.contact_info) {
-        await supabase.from('private_fields').insert({
-          profile_id: profile.id,
+        await addDoc(collection(db, 'privateFields'), {
+          profileId: profileRef.id,
           location: profileData.location || null,
-          contact_info: profileData.contact_info || null,
+          contactInfo: profileData.contact_info || null,
         });
       }
 
       const { personAId, personBId, relType } = resolveRelationship(
-        profile.id,
+        profileRef.id,
         relationship.relatedToId,
         relationship.relationshipLabel
       );
 
-      await supabase.from('relationships').insert({
-        person_a_id: personAId,
-        person_b_id: personBId,
-        relationship_type: relType,
+      await addDoc(collection(db, 'relationships'), {
+        personAId,
+        personBId,
+        relationshipType: relType,
         subtype: relationship.subtype,
-        start_year: relationship.startYear,
-        end_year: relationship.endYear,
+        startYear: relationship.startYear,
+        endYear: relationship.endYear,
         status: 'pending',
-        submission_batch_id: batchId,
-        created_by: user.id,
+        submissionBatchId: batchId,
+        createdBy: user.uid,
+        createdAt: serverTimestamp(),
       });
 
       if (isSelf) {
-        await supabase.from('profile_claims').insert({
-          profile_id: profile.id,
-          claimant_id: user.id,
+        await addDoc(collection(db, 'profileClaims'), {
+          profileId: profileRef.id,
+          claimantId: user.uid,
           status: 'pending',
+          createdAt: serverTimestamp(),
+          resolvedAt: null,
         });
       }
 
-      const tempId = profile.id;
       setPendingSubmissions(prev => [
         ...prev,
-        { tempId, profileData, relationship },
+        { tempId: profileRef.id, profileData, relationship },
       ]);
 
-      return profile.id;
+      return profileRef.id;
     } catch (err: any) {
       setError(err.message || 'Submission failed');
       return null;

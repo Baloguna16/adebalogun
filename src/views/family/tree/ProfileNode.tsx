@@ -20,12 +20,12 @@ function ProfileNodeInner({ data }: NodeProps) {
   const theme = useTheme();
   const { profile, isCollapsed, collapsedCount, onToggleCollapse, hasPrivateFields, onRequestLocation, onRequestContact } = data as unknown as ProfileNodeData;
 
-  const initials = `${profile.first_name[0]}${profile.last_name[0]}`.toUpperCase();
+  const initials = `${profile.firstName[0]}${profile.lastName[0]}`.toUpperCase();
 
-  const birthDisplay = profile.birth_year
-    ? `${profile.birth_year_approximate ? 'c. ' : 'b. '}${profile.birth_year}`
+  const birthDisplay = profile.birthYear
+    ? `${profile.birthYearApproximate ? 'c. ' : 'b. '}${profile.birthYear}`
     : '';
-  const deathDisplay = profile.death_year ? ` — d. ${profile.death_year}` : '';
+  const deathDisplay = profile.deathYear ? ` — d. ${profile.deathYear}` : '';
 
   return (
     <Box
@@ -51,7 +51,7 @@ function ProfileNodeInner({ data }: NodeProps) {
         }}
       >
         <Avatar
-          src={profile.photo_url || undefined}
+          src={profile.photoUrl || undefined}
           sx={{
             width: 56,
             height: 56,
@@ -69,7 +69,7 @@ function ProfileNodeInner({ data }: NodeProps) {
 
       <Box sx={{ pt: 4, pb: 2, px: 2, textAlign: 'center' }}>
         <Typography variant="subtitle1" fontWeight={600}>
-          {profile.first_name} {profile.last_name}
+          {profile.firstName} {profile.lastName}
         </Typography>
         {(birthDisplay || deathDisplay) && (
           <Typography variant="caption" color="text.secondary">

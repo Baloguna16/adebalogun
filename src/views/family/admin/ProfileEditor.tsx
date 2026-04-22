@@ -3,8 +3,9 @@ import {
   Dialog, DialogTitle, DialogContent, DialogActions, Button,
   TextField, Box, Checkbox, FormControlLabel,
 } from '@mui/material';
+import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../firebaseConfig';
 import { Profile } from '../types';
-import { supabase } from '../supabaseClient';
 
 interface ProfileEditorProps {
   profile: Profile;
@@ -15,28 +16,26 @@ interface ProfileEditorProps {
 
 export function ProfileEditor({ profile, open, onClose, onSaved }: ProfileEditorProps) {
   const [form, setForm] = useState({
-    first_name: profile.first_name,
-    last_name: profile.last_name,
-    birth_year: profile.birth_year,
-    birth_year_approximate: profile.birth_year_approximate,
-    death_year: profile.death_year,
+    firstName: profile.firstName,
+    lastName: profile.lastName,
+    birthYear: profile.birthYear,
+    birthYearApproximate: profile.birthYearApproximate,
+    deathYear: profile.deathYear,
     bio: profile.bio || '',
   });
   const [saving, setSaving] = useState(false);
 
   const handleSave = async () => {
     setSaving(true);
-    await supabase
-      .from('profiles')
-      .update({
-        first_name: form.first_name,
-        last_name: form.last_name,
-        birth_year: form.birth_year,
-        birth_year_approximate: form.birth_year_approximate,
-        death_year: form.death_year,
-        bio: form.bio || null,
-      })
-      .eq('id', profile.id);
+    await updateDoc(doc(db, 'profiles', profile.id), {
+      firstName: form.firstName,
+      lastName: form.lastName,
+      birthYear: form.birthYear,
+      birthYearApproximate: form.birthYearApproximate,
+      deathYear: form.deathYear,
+      bio: form.bio || null,
+      updatedAt: serverTimestamp(),
+    });
     setSaving(false);
     onSaved();
     onClose();
@@ -49,14 +48,14 @@ export function ProfileEditor({ profile, open, onClose, onSaved }: ProfileEditor
         <Box sx={{ display: 'flex', gap: 2, mt: 1, mb: 2 }}>
           <TextField
             label="First name"
-            value={form.first_name}
-            onChange={(e) => setForm(f => ({ ...f, first_name: e.target.value }))}
+            value={form.firstName}
+            onChange={(e) => setForm(f => ({ ...f, firstName: e.target.value }))}
             fullWidth
           />
           <TextField
             label="Last name"
-            value={form.last_name}
-            onChange={(e) => setForm(f => ({ ...f, last_name: e.target.value }))}
+            value={form.lastName}
+            onChange={(e) => setForm(f => ({ ...f, lastName: e.target.value }))}
             fullWidth
           />
         </Box>
@@ -64,15 +63,15 @@ export function ProfileEditor({ profile, open, onClose, onSaved }: ProfileEditor
           <TextField
             label="Birth year"
             type="number"
-            value={form.birth_year ?? ''}
-            onChange={(e) => setForm(f => ({ ...f, birth_year: e.target.value ? parseInt(e.target.value) : null }))}
+            value={form.birthYear ?? ''}
+            onChange={(e) => setForm(f => ({ ...f, birthYear: e.target.value ? parseInt(e.target.value) : null }))}
             sx={{ width: 140 }}
           />
           <FormControlLabel
             control={
               <Checkbox
-                checked={form.birth_year_approximate}
-                onChange={(e) => setForm(f => ({ ...f, birth_year_approximate: e.target.checked }))}
+                checked={form.birthYearApproximate}
+                onChange={(e) => setForm(f => ({ ...f, birthYearApproximate: e.target.checked }))}
               />
             }
             label="Approximate"
@@ -80,8 +79,8 @@ export function ProfileEditor({ profile, open, onClose, onSaved }: ProfileEditor
           <TextField
             label="Death year"
             type="number"
-            value={form.death_year ?? ''}
-            onChange={(e) => setForm(f => ({ ...f, death_year: e.target.value ? parseInt(e.target.value) : null }))}
+            value={form.deathYear ?? ''}
+            onChange={(e) => setForm(f => ({ ...f, deathYear: e.target.value ? parseInt(e.target.value) : null }))}
             sx={{ width: 140 }}
           />
         </Box>

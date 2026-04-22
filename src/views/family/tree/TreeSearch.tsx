@@ -10,7 +10,7 @@ interface TreeSearchProps {
 export function TreeSearch({ profiles, onSelect }: TreeSearchProps) {
   const options = profiles.map(p => ({
     id: p.id,
-    label: `${p.first_name} ${p.last_name}`,
+    label: `${p.firstName} ${p.lastName}`,
   }));
 
   return (

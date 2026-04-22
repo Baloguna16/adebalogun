@@ -5,47 +5,47 @@ export type RelationshipSubtype = 'biological' | 'adoptive' | 'step' | 'foster';
 
 export interface Profile {
   id: string;
-  first_name: string;
-  last_name: string;
-  birth_year: number | null;
-  birth_year_approximate: boolean;
-  death_year: number | null;
+  firstName: string;
+  lastName: string;
+  birthYear: number | null;
+  birthYearApproximate: boolean;
+  deathYear: number | null;
   bio: string | null;
-  photo_url: string | null;
-  created_by: string;
-  submission_batch_id: string;
+  photoUrl: string | null;
+  createdBy: string;
+  submissionBatchId: string;
   status: ProfileStatus;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ProfileClaim {
   id: string;
-  profile_id: string;
-  claimant_id: string;
+  profileId: string;
+  claimantId: string;
   status: ClaimStatus;
-  created_at: string;
-  resolved_at: string | null;
+  createdAt: string;
+  resolvedAt: string | null;
 }
 
 export interface Relationship {
   id: string;
-  person_a_id: string;
-  person_b_id: string;
-  relationship_type: RelationshipType;
+  personAId: string;
+  personBId: string;
+  relationshipType: RelationshipType;
   subtype: RelationshipSubtype | null;
-  start_year: number | null;
-  end_year: number | null;
+  startYear: number | null;
+  endYear: number | null;
   status: ProfileStatus;
-  submission_batch_id: string;
-  created_by: string;
-  created_at: string;
+  submissionBatchId: string;
+  createdBy: string;
+  createdAt: string;
 }
 
 export interface PrivateFields {
-  profile_id: string;
+  profileId: string;
   location: string | null;
-  contact_info: string | null;
+  contactInfo: string | null;
 }
 
 export interface ProfileWithClaim extends Profile {

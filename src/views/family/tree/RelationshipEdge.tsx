@@ -18,8 +18,8 @@ export function RelationshipEdge(props: EdgeProps) {
     borderRadius: 12,
   });
 
-  const isSpouse = relationship?.relationship_type === 'spouse';
-  const isDivorced = isSpouse && relationship?.end_year != null;
+  const isSpouse = relationship?.relationshipType === 'spouse';
+  const isDivorced = isSpouse && relationship?.endYear != null;
 
   return (
     <BaseEdge

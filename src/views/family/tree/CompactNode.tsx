@@ -13,13 +13,13 @@ interface CompactNodeData {
 function CompactNodeInner({ data }: NodeProps) {
   const theme = useTheme();
   const { profile, isCollapsed, collapsedCount } = data as unknown as CompactNodeData;
-  const initials = `${profile.first_name[0]}${profile.last_name[0]}`.toUpperCase();
+  const initials = `${profile.firstName[0]}${profile.lastName[0]}`.toUpperCase();
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>
       <Handle type="target" position={Position.Top} style={{ visibility: 'hidden' }} />
       <Avatar
-        src={profile.photo_url || undefined}
+        src={profile.photoUrl || undefined}
         sx={{
           width: 40,
           height: 40,
@@ -31,7 +31,7 @@ function CompactNodeInner({ data }: NodeProps) {
         {initials}
       </Avatar>
       <Typography variant="caption" sx={{ fontWeight: 600, textAlign: 'center', maxWidth: 80 }} noWrap>
-        {profile.first_name}
+        {profile.firstName}
       </Typography>
       {isCollapsed && collapsedCount > 0 && (
         <Chip label={`+${collapsedCount}`} size="small" sx={{ height: 18, fontSize: '0.6rem' }} />

@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Node, Edge } from '@xyflow/react';
 import ELK, { ElkNode } from 'elkjs/lib/elk.bundled';
-import { supabase } from '../supabaseClient';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '../firebaseConfig';
 import { Profile, Relationship } from '../types';
 
 const elk = new ELK();
@@ -16,8 +17,6 @@ const ELK_OPTIONS = {
 
 const PROFILE_NODE_WIDTH = 260;
 const PROFILE_NODE_HEIGHT = 200;
-const COMPACT_NODE_WIDTH = 100;
-const COMPACT_NODE_HEIGHT = 80;
 
 export interface TreeData {
   profiles: Profile[];
@@ -34,13 +33,13 @@ export function useFamilyTree(focusProfileId: string | null) {
   const fetchData = useCallback(async () => {
     setLoading(true);
 
-    const [profilesRes, relationshipsRes] = await Promise.all([
-      supabase.from('profiles').select('*').eq('status', 'approved'),
-      supabase.from('relationships').select('*').eq('status', 'approved'),
+    const [profilesSnap, relationshipsSnap] = await Promise.all([
+      getDocs(query(collection(db, 'profiles'), where('status', '==', 'approved'))),
+      getDocs(query(collection(db, 'relationships'), where('status', '==', 'approved'))),
     ]);
 
-    const profiles = (profilesRes.data || []) as Profile[];
-    const relationships = (relationshipsRes.data || []) as Relationship[];
+    const profiles = profilesSnap.docs.map(d => ({ id: d.id, ...d.data() })) as Profile[];
+    const relationships = relationshipsSnap.docs.map(d => ({ id: d.id, ...d.data() })) as Relationship[];
 
     setTreeData({ profiles, relationships });
     setLoading(false);
@@ -63,7 +62,7 @@ export function useFamilyTree(focusProfileId: string | null) {
       const visibleIds = new Set(visibleProfiles.map(p => p.id));
 
       const visibleRelationships = treeData.relationships.filter(
-        r => visibleIds.has(r.person_a_id) && visibleIds.has(r.person_b_id)
+        r => visibleIds.has(r.personAId) && visibleIds.has(r.personBId)
       );
 
       const elkGraph: ElkNode = {
@@ -76,8 +75,8 @@ export function useFamilyTree(focusProfileId: string | null) {
         })),
         edges: visibleRelationships.map(r => ({
           id: r.id,
-          sources: [r.person_a_id],
-          targets: [r.person_b_id],
+          sources: [r.personAId],
+          targets: [r.personBId],
         })),
       };
 
@@ -104,8 +103,8 @@ export function useFamilyTree(focusProfileId: string | null) {
 
         const newEdges: Edge[] = visibleRelationships.map(r => ({
           id: r.id,
-          source: r.person_a_id,
-          target: r.person_b_id,
+          source: r.personAId,
+          target: r.personBId,
           type: 'relationshipEdge',
           data: { relationship: r },
         }));
@@ -144,8 +143,8 @@ function getDescendants(
   visited.add(nodeId);
 
   const children = relationships
-    .filter(r => r.relationship_type === 'parent_child' && r.person_a_id === nodeId)
-    .map(r => r.person_b_id);
+    .filter(r => r.relationshipType === 'parent_child' && r.personAId === nodeId)
+    .map(r => r.personBId);
 
   children.forEach(childId => {
     getDescendants(childId, relationships, visited);

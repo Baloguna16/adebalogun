@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { supabase } from '../supabaseClient';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from '../firebaseConfig';
 
 export function useContactRequest() {
   const [sending, setSending] = useState(false);
@@ -12,17 +13,16 @@ export function useContactRequest() {
   ) => {
     setSending(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = auth.currentUser;
       if (!user) throw new Error('Not authenticated');
-      const { error } = await supabase.functions.invoke('request-info', {
-        body: {
-          requester_email: user.email,
-          profile_id: profileId,
-          profile_name: profileName,
-          request_type: type,
-        },
+      await addDoc(collection(db, 'contactRequests'), {
+        requesterEmail: user.email,
+        requesterUid: user.uid,
+        profileId,
+        profileName,
+        requestType: type,
+        createdAt: serverTimestamp(),
       });
-      if (error) throw error;
       setSent(prev => {
         const next = new Set(Array.from(prev));
         next.add(`${profileId}-${type}`);

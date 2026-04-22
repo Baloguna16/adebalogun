@@ -3,8 +3,9 @@ import {
   Box, Typography, TextField, Autocomplete, FormControl, InputLabel,
   Select, MenuItem, Button, SelectChangeEvent,
 } from '@mui/material';
+import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { db } from '../firebaseConfig';
 import { Profile, RelationshipSubtype } from '../types';
-import { supabase } from '../supabaseClient';
 
 interface PendingPerson {
   tempId: string;
@@ -37,12 +38,11 @@ export function RelationshipPicker({ onSubmit, onBack, pendingPeople = [], subje
 
   useEffect(() => {
     const fetchProfiles = async () => {
-      const { data } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('status', 'approved')
-        .order('last_name');
-      if (data) setApprovedProfiles(data);
+      const snap = await getDocs(
+        query(collection(db, 'profiles'), where('status', '==', 'approved'), orderBy('lastName'))
+      );
+      const data = snap.docs.map(d => ({ id: d.id, ...d.data() })) as Profile[];
+      setApprovedProfiles(data);
     };
     fetchProfiles();
   }, []);
@@ -50,7 +50,7 @@ export function RelationshipPicker({ onSubmit, onBack, pendingPeople = [], subje
   const allOptions = [
     ...approvedProfiles.map(p => ({
       id: p.id,
-      label: `${p.first_name} ${p.last_name}`,
+      label: `${p.firstName} ${p.lastName}`,
     })),
     ...pendingPeople.map(p => ({
       id: p.tempId,

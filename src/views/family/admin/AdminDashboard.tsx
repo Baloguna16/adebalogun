@@ -2,8 +2,11 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   Container, Typography, Box, Tabs, Tab, Button, Alert, CircularProgress, Autocomplete, TextField,
 } from '@mui/material';
+import {
+  collection, getDocs, doc, updateDoc, query, where, orderBy, serverTimestamp, writeBatch,
+} from 'firebase/firestore';
 import { useAuth } from '../hooks/useAuth';
-import { supabase } from '../supabaseClient';
+import { db } from '../firebaseConfig';
 import { Profile, Relationship, ProfileClaim } from '../types';
 import { SubmissionCard } from './SubmissionCard';
 import { ProfileEditor } from './ProfileEditor';
@@ -22,14 +25,14 @@ export function AdminDashboard() {
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    const [profilesRes, relsRes, claimsRes] = await Promise.all([
-      supabase.from('profiles').select('*').order('created_at', { ascending: false }),
-      supabase.from('relationships').select('*'),
-      supabase.from('profile_claims').select('*').order('created_at', { ascending: false }),
+    const [profilesSnap, relsSnap, claimsSnap] = await Promise.all([
+      getDocs(query(collection(db, 'profiles'), orderBy('createdAt', 'desc'))),
+      getDocs(collection(db, 'relationships')),
+      getDocs(query(collection(db, 'profileClaims'), orderBy('createdAt', 'desc'))),
     ]);
-    setProfiles((profilesRes.data || []) as Profile[]);
-    setRelationships((relsRes.data || []) as Relationship[]);
-    setClaims((claimsRes.data || []) as ProfileClaim[]);
+    setProfiles(profilesSnap.docs.map(d => ({ id: d.id, ...d.data() })) as Profile[]);
+    setRelationships(relsSnap.docs.map(d => ({ id: d.id, ...d.data() })) as Relationship[]);
+    setClaims(claimsSnap.docs.map(d => ({ id: d.id, ...d.data() })) as ProfileClaim[]);
     setLoading(false);
   }, []);
 
@@ -50,79 +53,98 @@ export function AdminDashboard() {
 
   const batchGroups = new Map<string, Profile[]>();
   for (const p of pendingProfiles) {
-    const batch = batchGroups.get(p.submission_batch_id) || [];
+    const batch = batchGroups.get(p.submissionBatchId) || [];
     batch.push(p);
-    batchGroups.set(p.submission_batch_id, batch);
+    batchGroups.set(p.submissionBatchId, batch);
   }
 
   const handleApprove = async (profileId: string) => {
     const profile = profiles.find(p => p.id === profileId);
     if (!profile) return;
 
-    await supabase.from('profiles').update({ status: 'approved' }).eq('id', profileId);
+    await updateDoc(doc(db, 'profiles', profileId), { status: 'approved', updatedAt: serverTimestamp() });
 
-    await supabase
-      .from('relationships')
-      .update({ status: 'approved' })
-      .or(`person_a_id.eq.${profileId},person_b_id.eq.${profileId}`)
-      .eq('status', 'pending');
+    const relatedRels = relationships.filter(
+      r => r.status === 'pending' && (r.personAId === profileId || r.personBId === profileId)
+    );
+    for (const rel of relatedRels) {
+      await updateDoc(doc(db, 'relationships', rel.id), { status: 'approved' });
+    }
 
     const pendingClaimForProfile = claims.find(
-      c => c.profile_id === profileId && c.status === 'pending'
+      c => c.profileId === profileId && c.status === 'pending'
     );
-    if (pendingClaimForProfile && profile.death_year != null) {
-      await supabase
-        .from('profile_claims')
-        .update({ status: 'approved', resolved_at: new Date().toISOString() })
-        .eq('id', pendingClaimForProfile.id);
+    if (pendingClaimForProfile && profile.deathYear != null) {
+      await updateDoc(doc(db, 'profileClaims', pendingClaimForProfile.id), {
+        status: 'approved',
+        resolvedAt: serverTimestamp(),
+      });
     }
 
     fetchData();
   };
 
   const handleDeny = async (profileId: string) => {
-    await supabase.from('profiles').update({ status: 'denied' }).eq('id', profileId);
+    await updateDoc(doc(db, 'profiles', profileId), { status: 'denied', updatedAt: serverTimestamp() });
 
-    await supabase
-      .from('relationships')
-      .update({ status: 'denied' })
-      .or(`person_a_id.eq.${profileId},person_b_id.eq.${profileId}`)
-      .eq('status', 'pending');
+    const relatedRels = relationships.filter(
+      r => r.status === 'pending' && (r.personAId === profileId || r.personBId === profileId)
+    );
+    for (const rel of relatedRels) {
+      await updateDoc(doc(db, 'relationships', rel.id), { status: 'denied' });
+    }
 
     fetchData();
   };
 
   const handleApproveClaim = async (claimId: string) => {
-    await supabase
-      .from('profile_claims')
-      .update({ status: 'approved', resolved_at: new Date().toISOString() })
-      .eq('id', claimId);
+    await updateDoc(doc(db, 'profileClaims', claimId), {
+      status: 'approved',
+      resolvedAt: serverTimestamp(),
+    });
     fetchData();
   };
 
   const handleDenyClaim = async (claimId: string) => {
-    await supabase
-      .from('profile_claims')
-      .update({ status: 'denied', resolved_at: new Date().toISOString() })
-      .eq('id', claimId);
+    await updateDoc(doc(db, 'profileClaims', claimId), {
+      status: 'denied',
+      resolvedAt: serverTimestamp(),
+    });
     fetchData();
   };
 
   const handleMerge = async (primaryId: string, duplicateId: string) => {
-    await supabase.from('relationships').update({ person_a_id: primaryId }).eq('person_a_id', duplicateId);
-    await supabase.from('relationships').update({ person_b_id: primaryId }).eq('person_b_id', duplicateId);
-    await supabase.from('profile_claims')
-      .update({ status: 'denied', resolved_at: new Date().toISOString() })
-      .eq('profile_id', duplicateId);
-    await supabase.from('profiles').update({ status: 'denied' }).eq('id', duplicateId);
+    const batch = writeBatch(db);
+
+    const relsWithDuplicate = relationships.filter(
+      r => r.personAId === duplicateId || r.personBId === duplicateId
+    );
+    for (const rel of relsWithDuplicate) {
+      const updates: Record<string, string> = {};
+      if (rel.personAId === duplicateId) updates.personAId = primaryId;
+      if (rel.personBId === duplicateId) updates.personBId = primaryId;
+      batch.update(doc(db, 'relationships', rel.id), updates);
+    }
+
+    const dupClaims = claims.filter(c => c.profileId === duplicateId);
+    for (const claim of dupClaims) {
+      batch.update(doc(db, 'profileClaims', claim.id), {
+        status: 'denied',
+        resolvedAt: serverTimestamp(),
+      });
+    }
+
+    batch.update(doc(db, 'profiles', duplicateId), { status: 'denied', updatedAt: serverTimestamp() });
+
+    await batch.commit();
     fetchData();
   };
 
   const hasDependents = (profileId: string) => {
     return relationships.some(
       r => r.status === 'pending' &&
-        (r.person_a_id === profileId || r.person_b_id === profileId) &&
-        r.person_a_id !== r.person_b_id
+        (r.personAId === profileId || r.personBId === profileId) &&
+        r.personAId !== r.personBId
     );
   };
 
@@ -155,7 +177,7 @@ export function AdminDashboard() {
                     key={profile.id}
                     profile={profile}
                     relationships={relationships.filter(
-                      r => r.person_a_id === profile.id || r.person_b_id === profile.id
+                      r => r.personAId === profile.id || r.personBId === profile.id
                     )}
                     allProfiles={profiles}
                     onApprove={handleApprove}
@@ -176,17 +198,17 @@ export function AdminDashboard() {
             <Alert severity="info">No pending claims.</Alert>
           ) : (
             pendingClaims.map(claim => {
-              const profile = profiles.find(p => p.id === claim.profile_id);
+              const profile = profiles.find(p => p.id === claim.profileId);
               return (
                 <Box key={claim.id} sx={{ mb: 2, p: 2, border: 1, borderColor: 'divider', borderRadius: 1 }}>
                   <Typography variant="subtitle1">
-                    Claim for: {profile ? `${profile.first_name} ${profile.last_name}` : 'Unknown'}
+                    Claim for: {profile ? `${profile.firstName} ${profile.lastName}` : 'Unknown'}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Claimant: {claim.claimant_id}
+                    Claimant: {claim.claimantId}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                    Submitted {new Date(claim.created_at).toLocaleDateString()}
+                    Submitted {new Date(claim.createdAt).toLocaleDateString()}
                   </Typography>
                   <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
                     <Button size="small" color="error" onClick={() => handleDenyClaim(claim.id)}>
@@ -205,14 +227,14 @@ export function AdminDashboard() {
 
       {!loading && tab === 2 && (() => {
         const approvedProfiles = profiles.filter(p => p.status === 'approved');
-        const options = approvedProfiles.map(p => ({ id: p.id, label: `${p.first_name} ${p.last_name}` }));
+        const options = approvedProfiles.map(p => ({ id: p.id, label: `${p.firstName} ${p.lastName}` }));
         return (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, maxWidth: 480 }}>
             <Typography variant="h6">Merge Duplicate Profiles</Typography>
             <Autocomplete
               options={options}
               getOptionLabel={(o) => o.label}
-              value={mergePrimary ? { id: mergePrimary.id, label: `${mergePrimary.first_name} ${mergePrimary.last_name}` } : null}
+              value={mergePrimary ? { id: mergePrimary.id, label: `${mergePrimary.firstName} ${mergePrimary.lastName}` } : null}
               onChange={(_, v) => setMergePrimary(v ? (approvedProfiles.find(p => p.id === v.id) ?? null) : null)}
               renderInput={(params) => <TextField {...params} label="Primary profile (keep)" size="small" />}
               isOptionEqualToValue={(o, v) => o.id === v.id}
@@ -220,7 +242,7 @@ export function AdminDashboard() {
             <Autocomplete
               options={options}
               getOptionLabel={(o) => o.label}
-              value={mergeDuplicate ? { id: mergeDuplicate.id, label: `${mergeDuplicate.first_name} ${mergeDuplicate.last_name}` } : null}
+              value={mergeDuplicate ? { id: mergeDuplicate.id, label: `${mergeDuplicate.firstName} ${mergeDuplicate.lastName}` } : null}
               onChange={(_, v) => setMergeDuplicate(v ? (approvedProfiles.find(p => p.id === v.id) ?? null) : null)}
               renderInput={(params) => <TextField {...params} label="Duplicate profile (remove)" size="small" />}
               isOptionEqualToValue={(o, v) => o.id === v.id}
