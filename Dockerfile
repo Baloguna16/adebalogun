@@ -1,5 +1,5 @@
 # Start from a base image with Node.js and Yarn installed
-FROM node:18.12.0 as build
+FROM node:20-alpine as build
 
 WORKDIR /app
 COPY . /app
