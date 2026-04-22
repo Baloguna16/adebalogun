@@ -27,35 +27,39 @@ export function useAuth() {
     }
     const checkAccess = async () => {
       setLoading(true);
-
-      const adminSnap = await getDocs(
-        query(collection(db, 'adminUsers'), where('userId', '==', user.uid))
-      );
-      setIsAdmin(!adminSnap.empty);
-
-      const claimsSnap = await getDocs(
-        query(collection(db, 'profileClaims'), where('claimantId', '==', user.uid))
-      );
-
-      if (claimsSnap.empty) {
-        const profilesSnap = await getDocs(
-          query(collection(db, 'profiles'), where('createdBy', '==', user.uid))
+      try {
+        const adminSnap = await getDocs(
+          query(collection(db, 'adminUsers'), where('userId', '==', user.uid))
         );
-        if (!profilesSnap.empty) {
-          const statuses = profilesSnap.docs.map(d => d.data().status as string);
-          if (statuses.includes('pending')) setAccessState({ type: 'pending' });
-          else if (statuses.includes('denied')) setAccessState({ type: 'denied' });
-          else setAccessState({ type: 'new_user' });
+        setIsAdmin(!adminSnap.empty);
+
+        const claimsSnap = await getDocs(
+          query(collection(db, 'profileClaims'), where('claimantId', '==', user.uid))
+        );
+
+        if (claimsSnap.empty) {
+          const profilesSnap = await getDocs(
+            query(collection(db, 'profiles'), where('createdBy', '==', user.uid))
+          );
+          if (!profilesSnap.empty) {
+            const statuses = profilesSnap.docs.map(d => d.data().status as string);
+            if (statuses.includes('pending')) setAccessState({ type: 'pending' });
+            else if (statuses.includes('denied')) setAccessState({ type: 'denied' });
+            else setAccessState({ type: 'new_user' });
+          } else {
+            setAccessState({ type: 'new_user' });
+          }
         } else {
-          setAccessState({ type: 'new_user' });
+          const claims = claimsSnap.docs.map(d => ({ id: d.id, ...d.data() })) as ProfileClaim[];
+          const approvedClaim = claims.find(c => c.status === 'approved');
+          const pendingClaim = claims.find(c => c.status === 'pending');
+          if (approvedClaim) setAccessState({ type: 'approved', profileId: approvedClaim.profileId });
+          else if (pendingClaim) setAccessState({ type: 'pending' });
+          else setAccessState({ type: 'denied' });
         }
-      } else {
-        const claims = claimsSnap.docs.map(d => ({ id: d.id, ...d.data() })) as ProfileClaim[];
-        const approvedClaim = claims.find(c => c.status === 'approved');
-        const pendingClaim = claims.find(c => c.status === 'pending');
-        if (approvedClaim) setAccessState({ type: 'approved', profileId: approvedClaim.profileId });
-        else if (pendingClaim) setAccessState({ type: 'pending' });
-        else setAccessState({ type: 'denied' });
+      } catch (err) {
+        console.error('Access check failed:', err);
+        setAccessState({ type: 'new_user' });
       }
       setLoading(false);
     };
