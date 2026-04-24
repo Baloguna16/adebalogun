@@ -30,7 +30,7 @@ export function FamilyPage() {
       return <PendingPage state="denied" onSignOut={signOut} />;
     case 'approved':
       if (showSubmission) {
-        return <SubmissionFlow isSelf={false} onComplete={() => setShowSubmission(false)} />;
+        return <SubmissionFlow isSelf={false} onComplete={() => setShowSubmission(false)} onBack={() => setShowSubmission(false)} />;
       }
       return (
         <Box sx={{ position: 'relative' }}>

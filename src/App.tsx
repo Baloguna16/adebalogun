@@ -4,7 +4,8 @@ import {
   Outlet,
   RouterProvider,
   createBrowserRouter,
-  createRoutesFromElements
+  createRoutesFromElements,
+  useLocation
 } from 'react-router-dom';
 
 import { ThemeProvider } from '@mui/material/styles';
@@ -46,6 +47,12 @@ const Loading = () => (
   </Box>
 );
 
+const HideFooterOnFamily = () => {
+  const { pathname } = useLocation();
+  if (pathname.startsWith('/family')) return null;
+  return <Footer />;
+};
+
 const AppProviderLayout = () => {
   const [mode, setMode] = useState<PaletteMode>(
     () => (localStorage.getItem('colorMode') as PaletteMode) || 'light'
@@ -79,7 +86,7 @@ const AppProviderLayout = () => {
           <Suspense fallback={<Loading />}>
             <Outlet />
           </Suspense>
-          <Footer />
+          <HideFooterOnFamily />
         </Box>
       </ThemeProvider>
     </ColorModeContext.Provider>

@@ -7,9 +7,10 @@ import { useSubmission } from '../hooks/useSubmission';
 interface SubmissionFlowProps {
   isSelf: boolean;
   onComplete: () => void;
+  onBack?: () => void;
 }
 
-export function SubmissionFlow({ isSelf, onComplete }: SubmissionFlowProps) {
+export function SubmissionFlow({ isSelf, onComplete, onBack }: SubmissionFlowProps) {
   const [step, setStep] = useState<'profile' | 'relationship' | 'done'>('profile');
   const [profileData, setProfileData] = useState<ProfileFormData | null>(null);
   const { pendingSubmissions, submitting, error, submitProfile } = useSubmission();
@@ -42,6 +43,7 @@ export function SubmissionFlow({ isSelf, onComplete }: SubmissionFlowProps) {
         {step === 'profile' && (
           <ProfileForm
             onSubmit={handleProfileSubmit}
+            onBack={onBack}
             title={isSelf && pendingSubmissions.length === 0
               ? 'Tell us about yourself'
               : 'Add a family member'}
