@@ -28,14 +28,18 @@ export function useAuth() {
     const checkAccess = async () => {
       setLoading(true);
       try {
+        console.log('[useAuth] checking access for uid:', user.uid);
+
         const adminSnap = await getDocs(
           query(collection(db, 'adminUsers'), where('userId', '==', user.uid))
         );
+        console.log('[useAuth] admin docs:', adminSnap.size);
         setIsAdmin(!adminSnap.empty);
 
         const claimsSnap = await getDocs(
           query(collection(db, 'profileClaims'), where('claimantId', '==', user.uid))
         );
+        console.log('[useAuth] claims docs:', claimsSnap.size, claimsSnap.docs.map(d => d.data()));
 
         if (claimsSnap.empty) {
           const profilesSnap = await getDocs(
@@ -57,8 +61,8 @@ export function useAuth() {
           else if (pendingClaim) setAccessState({ type: 'pending' });
           else setAccessState({ type: 'denied' });
         }
-      } catch (err) {
-        console.error('Access check failed:', err);
+      } catch (err: any) {
+        console.error('[useAuth] Access check failed:', err.code, err.message);
         setAccessState({ type: 'new_user' });
       }
       setLoading(false);
