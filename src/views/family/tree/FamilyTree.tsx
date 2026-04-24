@@ -83,10 +83,12 @@ function FamilyTreeInner(props: FamilyTreeProps) {
   if (loading) return null;
 
   return (
-    <Box sx={{ width: '100%', height: 'calc(100vh - 140px)', position: 'relative' }}>
-      <TreeSearch profiles={treeData.profiles} onSelect={handleSearchSelect} />
-      <Box sx={{ position: 'absolute', top: 16, right: 16, zIndex: 10 }}>
-        <Button variant="outlined" size="small" onClick={props.onSignOut}>Sign out</Button>
+    <Box sx={{ width: '100%', height: 'calc(100vh - 80px)', position: 'relative' }}>
+      <Box sx={{ position: 'absolute', bottom: 16, left: 60, right: 16, zIndex: 10, display: 'flex', alignItems: 'center', gap: 2 }}>
+        <TreeSearch profiles={treeData.profiles} onSelect={handleSearchSelect} />
+        <Box sx={{ ml: 'auto' }}>
+          <Button variant="outlined" size="small" onClick={props.onSignOut}>Sign out</Button>
+        </Box>
       </Box>
       <ReactFlow
         nodes={displayNodes}

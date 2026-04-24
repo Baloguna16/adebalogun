@@ -14,7 +14,7 @@ export function TreeSearch({ profiles, onSelect }: TreeSearchProps) {
   }));
 
   return (
-    <Box sx={{ position: 'absolute', top: 16, left: 16, zIndex: 10, width: 280 }}>
+    <Box sx={{ width: 280 }}>
       <Autocomplete
         options={options}
         getOptionLabel={(o) => o.label}
