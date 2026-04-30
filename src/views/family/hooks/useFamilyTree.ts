@@ -83,12 +83,13 @@ export function useFamilyTree(focusProfileId: string | null) {
       try {
         const layout = await elk.layout(elkGraph);
 
-        const newNodes: Node[] = (layout.children || []).map(elkNode => {
-          const profile = visibleProfiles.find(p => p.id === elkNode.id)!;
+        const newNodes: Node[] = (layout.children || []).flatMap(elkNode => {
+          const profile = visibleProfiles.find(p => p.id === elkNode.id);
+          if (!profile) return [];
           const descendantCount = getDescendantCount(profile.id, treeData.relationships, treeData.profiles);
           const isCollapsed = collapsedNodes.has(profile.id);
 
-          return {
+          return [{
             id: profile.id,
             type: 'profileNode',
             position: { x: elkNode.x || 0, y: elkNode.y || 0 },
@@ -98,7 +99,7 @@ export function useFamilyTree(focusProfileId: string | null) {
               collapsedCount: isCollapsed ? descendantCount : 0,
               onToggleCollapse: () => toggleCollapse(profile.id),
             },
-          };
+          }];
         });
 
         const newEdges: Edge[] = visibleRelationships.map(r => ({

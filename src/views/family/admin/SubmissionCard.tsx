@@ -25,7 +25,7 @@ export function SubmissionCard({
   onEdit,
   hasDependents,
 }: SubmissionCardProps) {
-  const initials = `${profile.firstName[0]}${profile.lastName[0]}`.toUpperCase();
+  const initials = `${profile.firstName?.[0] ?? ''}${profile.lastName?.[0] ?? ''}`.toUpperCase();
 
   const getPersonName = (id: string) => {
     const p = allProfiles.find(ap => ap.id === id);
@@ -85,7 +85,7 @@ export function SubmissionCard({
             })}
 
             <Typography variant="caption" color="text.secondary" display="block" sx={{ mt: 1 }}>
-              Submitted {new Date(profile.createdAt).toLocaleDateString()}
+              Submitted {(profile.createdAt as any)?.toDate?.()?.toLocaleDateString?.() ?? ''}
             </Typography>
           </Box>
         </Box>

@@ -74,7 +74,7 @@ export function AdminDashboard() {
     const pendingClaimForProfile = claims.find(
       c => c.profileId === profileId && c.status === 'pending'
     );
-    if (pendingClaimForProfile && profile.deathYear != null) {
+    if (pendingClaimForProfile && profile.deathYear == null) {
       await updateDoc(doc(db, 'profileClaims', pendingClaimForProfile.id), {
         status: 'approved',
         resolvedAt: serverTimestamp(),
@@ -208,7 +208,7 @@ export function AdminDashboard() {
                     Claimant: {claim.claimantId}
                   </Typography>
                   <Typography variant="caption" color="text.secondary">
-                    Submitted {new Date(claim.createdAt).toLocaleDateString()}
+                    Submitted {(claim.createdAt as any)?.toDate?.()?.toLocaleDateString?.() ?? ''}
                   </Typography>
                   <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
                     <Button size="small" color="error" onClick={() => handleDenyClaim(claim.id)}>

@@ -28,18 +28,14 @@ export function useAuth() {
     const checkAccess = async () => {
       setLoading(true);
       try {
-        console.log('[useAuth] checking access for uid:', user.uid);
-
         const adminSnap = await getDocs(
           query(collection(db, 'adminUsers'), where('userId', '==', user.uid))
         );
-        console.log('[useAuth] admin docs:', adminSnap.size);
         setIsAdmin(!adminSnap.empty);
 
         const claimsSnap = await getDocs(
           query(collection(db, 'profileClaims'), where('claimantId', '==', user.uid))
         );
-        console.log('[useAuth] claims docs:', claimsSnap.size, claimsSnap.docs.map(d => d.data()));
 
         if (claimsSnap.empty) {
           const profilesSnap = await getDocs(

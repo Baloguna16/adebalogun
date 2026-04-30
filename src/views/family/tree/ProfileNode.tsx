@@ -20,7 +20,7 @@ function ProfileNodeInner({ data }: NodeProps) {
   const theme = useTheme();
   const { profile, isCollapsed, collapsedCount, onToggleCollapse, hasPrivateFields, onRequestLocation, onRequestContact } = data as unknown as ProfileNodeData;
 
-  const initials = `${profile.firstName[0]}${profile.lastName[0]}`.toUpperCase();
+  const initials = `${profile.firstName?.[0] ?? ''}${profile.lastName?.[0] ?? ''}`.toUpperCase();
 
   const birthDisplay = profile.birthYear
     ? `${profile.birthYearApproximate ? 'c. ' : 'b. '}${profile.birthYear}`

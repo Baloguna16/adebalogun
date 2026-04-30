@@ -47,10 +47,10 @@ const Loading = () => (
   </Box>
 );
 
-const HideFooterOnFamily = () => {
+const HideOnFamily = ({ children }: { children: React.ReactNode }) => {
   const { pathname } = useLocation();
   if (pathname.startsWith('/family')) return null;
-  return <Footer />;
+  return <>{children}</>;
 };
 
 const AppProviderLayout = () => {
@@ -82,11 +82,11 @@ const AppProviderLayout = () => {
           }}
           mb={0}
         >
-          <Navbar />
+          <HideOnFamily><Navbar /></HideOnFamily>
           <Suspense fallback={<Loading />}>
             <Outlet />
           </Suspense>
-          <HideFooterOnFamily />
+          <HideOnFamily><Footer /></HideOnFamily>
         </Box>
       </ThemeProvider>
     </ColorModeContext.Provider>

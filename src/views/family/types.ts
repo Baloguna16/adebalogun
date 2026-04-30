@@ -15,8 +15,8 @@ export interface Profile {
   createdBy: string;
   submissionBatchId: string;
   status: ProfileStatus;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: any;
+  updatedAt: any;
 }
 
 export interface ProfileClaim {
@@ -24,8 +24,8 @@ export interface ProfileClaim {
   profileId: string;
   claimantId: string;
   status: ClaimStatus;
-  createdAt: string;
-  resolvedAt: string | null;
+  createdAt: any;
+  resolvedAt: any;
 }
 
 export interface Relationship {
@@ -39,7 +39,7 @@ export interface Relationship {
   status: ProfileStatus;
   submissionBatchId: string;
   createdBy: string;
-  createdAt: string;
+  createdAt: any;
 }
 
 export interface PrivateFields {

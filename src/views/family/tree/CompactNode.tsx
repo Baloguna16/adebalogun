@@ -13,7 +13,7 @@ interface CompactNodeData {
 function CompactNodeInner({ data }: NodeProps) {
   const theme = useTheme();
   const { profile, isCollapsed, collapsedCount } = data as unknown as CompactNodeData;
-  const initials = `${profile.firstName[0]}${profile.lastName[0]}`.toUpperCase();
+  const initials = `${profile.firstName?.[0] ?? ''}${profile.lastName?.[0] ?? ''}`.toUpperCase();
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 0.5 }}>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {
-  Box, TextField, Button, Typography, Checkbox, FormControlLabel, Alert,
+  Box, TextField, Button, Typography, Checkbox, FormControlLabel, Alert, Snackbar,
 } from '@mui/material';
 
 export interface ProfileFormData {
@@ -22,7 +22,10 @@ interface ProfileFormProps {
   subtitle?: string;
 }
 
+const MAX_PHOTO_SIZE = 5 * 1024 * 1024;
+
 export function ProfileForm({ onSubmit, onBack, title, subtitle }: ProfileFormProps) {
+  const [photoError, setPhotoError] = useState<string | null>(null);
   const [form, setForm] = useState<ProfileFormData>({
     first_name: '',
     last_name: '',
@@ -131,7 +134,16 @@ export function ProfileForm({ onSubmit, onBack, title, subtitle }: ProfileFormPr
           type="file"
           hidden
           accept="image/*"
-          onChange={(e) => setForm(f => ({ ...f, photo: e.target.files?.[0] || null }))}
+          onChange={(e) => {
+            const file = e.target.files?.[0] || null;
+            if (file && file.size > MAX_PHOTO_SIZE) {
+              setPhotoError('Photo must be under 5 MB');
+              e.target.value = '';
+              return;
+            }
+            setPhotoError(null);
+            setForm(f => ({ ...f, photo: file }));
+          }}
         />
       </Button>
       {form.photo && (
@@ -139,6 +151,8 @@ export function ProfileForm({ onSubmit, onBack, title, subtitle }: ProfileFormPr
           {form.photo.name}
         </Typography>
       )}
+      <Snackbar open={!!photoError} autoHideDuration={4000} onClose={() => setPhotoError(null)}
+        message={photoError} />
 
       <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
         {onBack && (
