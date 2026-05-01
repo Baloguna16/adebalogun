@@ -3,7 +3,7 @@ import {
   Box, Typography, TextField, Autocomplete, FormControl, InputLabel,
   Select, MenuItem, Button, SelectChangeEvent,
 } from '@mui/material';
-import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { Profile, RelationshipSubtype } from '../types';
 
@@ -39,9 +39,10 @@ export function RelationshipPicker({ onSubmit, onBack, pendingPeople = [], subje
   useEffect(() => {
     const fetchProfiles = async () => {
       const snap = await getDocs(
-        query(collection(db, 'profiles'), where('status', '==', 'approved'), orderBy('lastName'))
+        query(collection(db, 'profiles'), where('status', '==', 'approved'))
       );
       const data = snap.docs.map(d => ({ id: d.id, ...d.data() })) as Profile[];
+      data.sort((a, b) => a.lastName.localeCompare(b.lastName));
       setApprovedProfiles(data);
     };
     fetchProfiles();
