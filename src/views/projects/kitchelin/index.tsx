@@ -1,0 +1,1 @@
+export { KitchelinPage } from './KitchelinPage';

@@ -1,0 +1,304 @@
+.kitchelin-page .kitchelin-accent {
+  color: #FF6A1A;
+}
+
+/* Gradient animation */
+@keyframes kitchelinGradient {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.kitchelin-gradient {
+  background: linear-gradient(-45deg, #FF6A1A, #FF8A4A, #FF6A1A);
+  background-size: 400% 400%;
+  animation: kitchelinGradient 8s ease infinite;
+}
+
+/* Phone grid */
+.kitchelin-phone-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* Phone frame */
+.kitchelin-phone {
+  position: relative;
+  border: 3px solid #1C1C1C;
+  border-radius: 32px;
+  overflow: hidden;
+  background: #FFF3E8;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  aspect-ratio: 9 / 19.5;
+}
+
+.kitchelin-phone-notch {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 22px;
+  background: #1C1C1C;
+  border-radius: 0 0 14px 14px;
+  z-index: 10;
+}
+
+.kitchelin-phone-screen {
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Shared screen styles */
+.kitchelin-screen-header {
+  padding: 36px 16px 10px;
+  text-align: center;
+}
+
+.kitchelin-screen-header h3 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1C1C1C;
+  margin: 0;
+}
+
+.kitchelin-screen-body {
+  flex: 1;
+  padding: 8px 12px;
+  overflow: hidden;
+}
+
+/* Tab bar */
+.kitchelin-tab-bar {
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 0 12px;
+  background: #FFF3E8;
+  border-top: 1px solid rgba(150, 121, 94, 0.15);
+}
+
+.kitchelin-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.5rem;
+  color: #96795E;
+  font-weight: 500;
+}
+
+.kitchelin-tab.active {
+  color: #FF6A1A;
+}
+
+.kitchelin-tab-icon {
+  font-size: 0.85rem;
+}
+
+/* Cook screen */
+.kitchelin-ingredient-photo {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #FFE0CC 0%, #FFF3E8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.kitchelin-ingredient-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.kitchelin-ingredient-chip {
+  background: #fff;
+  border: 1px solid rgba(255, 106, 26, 0.2);
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 0.5rem;
+  color: #1C1C1C;
+  font-weight: 500;
+}
+
+.kitchelin-generate-btn {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: default;
+  letter-spacing: 0.3px;
+}
+
+/* Recipe screen */
+.kitchelin-recipe-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #1C1C1C;
+  margin: 0 0 4px;
+}
+
+.kitchelin-recipe-meta {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.kitchelin-recipe-tag {
+  background: rgba(150, 121, 94, 0.12);
+  border-radius: 8px;
+  padding: 2px 6px;
+  font-size: 0.45rem;
+  color: #96795E;
+  font-weight: 600;
+}
+
+.kitchelin-recipe-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.kitchelin-recipe-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.kitchelin-step-number {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #FF6A1A;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.4rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.kitchelin-step-number.done {
+  background: #5D9E6B;
+}
+
+.kitchelin-step-text {
+  font-size: 0.48rem;
+  color: #1C1C1C;
+  line-height: 1.4;
+}
+
+.kitchelin-timer-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: rgba(61, 138, 143, 0.12);
+  color: #3D8A8F;
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 0.4rem;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+/* Sous-Chef screen */
+.kitchelin-souschef-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px;
+  gap: 12px;
+}
+
+.kitchelin-waveform {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  height: 40px;
+}
+
+.kitchelin-wave-bar {
+  width: 3px;
+  border-radius: 2px;
+  background: #FF6A1A;
+  animation: kitchelinWave 1.2s ease-in-out infinite;
+}
+
+.kitchelin-wave-bar:nth-child(1) { height: 12px; animation-delay: 0s; }
+.kitchelin-wave-bar:nth-child(2) { height: 24px; animation-delay: 0.1s; }
+.kitchelin-wave-bar:nth-child(3) { height: 36px; animation-delay: 0.2s; }
+.kitchelin-wave-bar:nth-child(4) { height: 28px; animation-delay: 0.3s; }
+.kitchelin-wave-bar:nth-child(5) { height: 18px; animation-delay: 0.4s; }
+.kitchelin-wave-bar:nth-child(6) { height: 30px; animation-delay: 0.15s; }
+.kitchelin-wave-bar:nth-child(7) { height: 14px; animation-delay: 0.35s; }
+
+@keyframes kitchelinWave {
+  0%, 100% { transform: scaleY(0.4); }
+  50%      { transform: scaleY(1); }
+}
+
+.kitchelin-souschef-label {
+  font-size: 0.55rem;
+  color: #96795E;
+  font-weight: 500;
+}
+
+.kitchelin-souschef-transcript {
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 0.48rem;
+  color: #1C1C1C;
+  line-height: 1.5;
+  text-align: left;
+  width: 100%;
+}
+
+.kitchelin-mic-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: default;
+  box-shadow: 0 4px 16px rgba(255, 106, 26, 0.35);
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .kitchelin-phone-grid {
+    grid-template-columns: 1fr;
+    max-width: 260px;
+    gap: 24px;
+  }
+}
+
+@media (min-width: 701px) and (max-width: 900px) {
+  .kitchelin-phone-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 520px;
+  }
+}

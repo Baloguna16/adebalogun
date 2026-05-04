@@ -33,6 +33,7 @@ const HubbubPage = lazy(() => import('./views/projects/hubbub').then(m => ({ def
 const ToolsIndex = lazy(() => import('./views/tools/ToolsIndex').then(m => ({ default: m.ToolsIndex })));
 const MarkdownViewer = lazy(() => import('./views/tools/markdown-viewer/MarkdownViewer').then(m => ({ default: m.MarkdownViewer })));
 const GynOncMap = lazy(() => import('./views/projects/gyn-onc-map').then(m => ({ default: m.GynOncMap })));
+const KitchelinPage = lazy(() => import('./views/projects/kitchelin').then(m => ({ default: m.KitchelinPage })));
 const WeddingBudget = lazy(() => import('./views/tools/wedding-budget/WeddingBudget').then(m => ({ default: m.WeddingBudget })));
 const DonatePage = lazy(() => import('./views/donate').then(m => ({ default: m.DonatePage })));
 const RickrollRedirect = lazy(() => import('./views/rickroll-redirect').then(m => ({ default: m.RickrollRedirect })));
@@ -112,6 +113,7 @@ const routes = createRoutesFromElements(
       <Route path="/projects" element={<ProjectPosts />} />
       <Route path="/projects/nyc-water" element={<WaterMap />} />
       <Route path="/projects/hubbub" element={<HubbubPage />} />
+      <Route path="/projects/kitchelin" element={<KitchelinPage />} />
       <Route path="/projects/gyn-onc-fellowships" element={<GynOncMap />} />
       <Route path="/blog" element={<BlogPosts />} />
       <Route path="/blog/:slug" element={<PostPage />} />
