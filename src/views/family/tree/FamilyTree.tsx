@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import {
   ReactFlow,
   MiniMap,
@@ -14,11 +14,14 @@ import { CompactNode } from './CompactNode';
 import { RelationshipEdge } from './RelationshipEdge';
 import { TreeSearch } from './TreeSearch';
 import { useFamilyTree } from '../hooks/useFamilyTree';
+import { EditProfileDialog } from './EditProfileDialog';
+import { Profile } from '../types';
 
 const ZOOM_THRESHOLD = 0.6;
 
 interface FamilyTreeProps {
   focusProfileId: string;
+  currentUserId: string;
   onSignOut?: () => void;
 }
 
@@ -33,12 +36,13 @@ const edgeTypes = {
 
 function FamilyTreeInner(props: FamilyTreeProps) {
   const { focusProfileId } = props;
-  const { nodes, edges, loading, treeData } = useFamilyTree(focusProfileId);
+  const { nodes, edges, loading, treeData } = useFamilyTree(focusProfileId, props.currentUserId);
   const { fitView, setCenter, getZoom } = useReactFlow();
   const { zoom } = useViewport();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const initialFitDone = useRef(false);
+  const [editingProfile, setEditingProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
     if (nodes.length > 0 && !initialFitDone.current) {
@@ -60,6 +64,10 @@ function FamilyTreeInner(props: FamilyTreeProps) {
     return nodes.map(node => ({
       ...node,
       type: zoom < ZOOM_THRESHOLD ? 'compactNode' : 'profileNode',
+      data: {
+        ...node.data,
+        onEdit: () => setEditingProfile((node.data as any).profile),
+      },
     }));
   }, [nodes, zoom]);
 
@@ -118,6 +126,14 @@ function FamilyTreeInner(props: FamilyTreeProps) {
         )}
         <Controls showInteractive={false} />
       </ReactFlow>
+      {editingProfile && (
+        <EditProfileDialog
+          profile={editingProfile}
+          privateFields={null}
+          open={true}
+          onClose={() => setEditingProfile(null)}
+        />
+      )}
     </Box>
   );
 }
@@ -125,7 +141,7 @@ function FamilyTreeInner(props: FamilyTreeProps) {
 export function FamilyTree(props: FamilyTreeProps) {
   return (
     <ReactFlowProvider>
-      <FamilyTreeInner focusProfileId={props.focusProfileId} onSignOut={props.onSignOut} />
+      <FamilyTreeInner focusProfileId={props.focusProfileId} currentUserId={props.currentUserId} onSignOut={props.onSignOut} />
     </ReactFlowProvider>
   );
 }

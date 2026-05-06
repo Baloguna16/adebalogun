@@ -14,11 +14,14 @@ interface ProfileNodeData {
   hasPrivateFields?: boolean;
   onRequestLocation?: () => void;
   onRequestContact?: () => void;
+  canEdit?: boolean;
+  hasPendingEdit?: boolean;
+  onEdit?: () => void;
 }
 
 function ProfileNodeInner({ data }: NodeProps) {
   const theme = useTheme();
-  const { profile, isCollapsed, collapsedCount, onToggleCollapse, hasPrivateFields, onRequestLocation, onRequestContact } = data as unknown as ProfileNodeData;
+  const { profile, isCollapsed, collapsedCount, onToggleCollapse, hasPrivateFields, onRequestLocation, onRequestContact, canEdit, hasPendingEdit, onEdit } = data as unknown as ProfileNodeData;
 
   const initials = `${profile.firstName?.[0] ?? ''}${profile.lastName?.[0] ?? ''}`.toUpperCase();
 
@@ -108,6 +111,20 @@ function ProfileNodeInner({ data }: NodeProps) {
                 sx={{ fontSize: '0.65rem' }}
               />
             )}
+          </Box>
+        )}
+
+        {canEdit && (
+          <Box sx={{ mt: 1 }}>
+            <Chip
+              label={hasPendingEdit ? 'Edit Pending' : 'Edit'}
+              size="small"
+              variant="outlined"
+              color={hasPendingEdit ? 'default' : 'secondary'}
+              disabled={hasPendingEdit}
+              onClick={(e) => { e.stopPropagation(); onEdit?.(); }}
+              sx={{ fontSize: '0.65rem' }}
+            />
           </Box>
         )}
 

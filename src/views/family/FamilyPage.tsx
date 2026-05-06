@@ -8,7 +8,7 @@ import { SubmissionFlow } from './submission/SubmissionFlow';
 import { FamilyTree } from './tree/FamilyTree';
 
 export function FamilyPage() {
-  const { accessState, loading, sendMagicLink, signOut } = useAuth();
+  const { user, accessState, loading, sendMagicLink, signOut } = useAuth();
   const [showSubmission, setShowSubmission] = useState(false);
 
   if (loading) {
@@ -34,7 +34,7 @@ export function FamilyPage() {
       }
       return (
         <Box sx={{ position: 'relative' }}>
-          <FamilyTree focusProfileId={accessState.profileId} onSignOut={signOut} />
+          <FamilyTree focusProfileId={accessState.profileId} currentUserId={user!.uid} onSignOut={signOut} />
           <Fab color="primary" sx={{ position: 'fixed', bottom: 24, right: 24 }}
             onClick={() => setShowSubmission(true)}>
             <PersonAddIcon />

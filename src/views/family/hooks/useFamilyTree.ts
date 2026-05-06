@@ -4,6 +4,7 @@ import ELK, { ElkNode } from 'elkjs/lib/elk.bundled';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../firebaseConfig';
 import { Profile, Relationship } from '../types';
+import { canEditProfile } from './useProfileEdit';
 
 const elk = new ELK();
 
@@ -23,12 +24,14 @@ export interface TreeData {
   relationships: Relationship[];
 }
 
-export function useFamilyTree(focusProfileId: string | null) {
+export function useFamilyTree(focusProfileId: string | null, currentUserId: string | null) {
   const [treeData, setTreeData] = useState<TreeData>({ profiles: [], relationships: [] });
   const [nodes, setNodes] = useState<Node[]>([]);
   const [edges, setEdges] = useState<Edge[]>([]);
   const [loading, setLoading] = useState(true);
   const [collapsedNodes, setCollapsedNodes] = useState<Set<string>>(new Set());
+  const [editableProfileIds, setEditableProfileIds] = useState<Set<string>>(new Set());
+  const [pendingEditProfileIds, setPendingEditProfileIds] = useState<Set<string>>(new Set());
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -48,6 +51,29 @@ export function useFamilyTree(focusProfileId: string | null) {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  useEffect(() => {
+    if (!currentUserId || treeData.profiles.length === 0) return;
+    const checkPermissions = async () => {
+      const editable = new Set<string>();
+      for (const profile of treeData.profiles) {
+        if (await canEditProfile(profile.id, currentUserId)) {
+          editable.add(profile.id);
+        }
+      }
+      setEditableProfileIds(editable);
+
+      const editsSnap = await getDocs(
+        query(
+          collection(db, 'profileEdits'),
+          where('submittedBy', '==', currentUserId),
+          where('status', '==', 'pending')
+        )
+      );
+      setPendingEditProfileIds(new Set(editsSnap.docs.map(d => d.data().profileId)));
+    };
+    checkPermissions();
+  }, [currentUserId, treeData.profiles]);
 
   useEffect(() => {
     if (treeData.profiles.length === 0) return;
@@ -98,6 +124,8 @@ export function useFamilyTree(focusProfileId: string | null) {
               isCollapsed,
               collapsedCount: isCollapsed ? descendantCount : 0,
               onToggleCollapse: () => toggleCollapse(profile.id),
+              canEdit: editableProfileIds.has(profile.id),
+              hasPendingEdit: pendingEditProfileIds.has(profile.id),
             },
           }];
         });
@@ -118,7 +146,7 @@ export function useFamilyTree(focusProfileId: string | null) {
     };
 
     layoutTree();
-  }, [treeData, collapsedNodes]);
+  }, [treeData, collapsedNodes, editableProfileIds, pendingEditProfileIds]);
 
   const toggleCollapse = useCallback((nodeId: string) => {
     setCollapsedNodes(prev => {
