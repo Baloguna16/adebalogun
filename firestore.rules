@@ -58,5 +58,16 @@ service cloud.firestore {
       allow read: if isAdmin();
       allow create: if isSignedIn();
     }
+
+    // Profile edits: users submit, admins approve/deny
+    match /profileEdits/{editId} {
+      allow read: if isSignedIn() && (
+        resource.data.submittedBy == request.auth.uid || isAdmin()
+      );
+      allow create: if isSignedIn() &&
+        request.resource.data.submittedBy == request.auth.uid &&
+        request.resource.data.status == 'pending';
+      allow update: if isAdmin();
+    }
   }
 }

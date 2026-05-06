@@ -48,6 +48,20 @@ export interface PrivateFields {
   contactInfo: string | null;
 }
 
+export interface ProfileEdit {
+  id: string;
+  profileId: string;
+  submittedBy: string;
+  changes: Partial<Omit<Profile, 'id' | 'createdBy' | 'submissionBatchId' | 'status' | 'createdAt' | 'updatedAt'>>;
+  privateFieldChanges: {
+    location?: string | null;
+    contactInfo?: string | null;
+  } | null;
+  status: ProfileStatus;
+  createdAt: any;
+  resolvedAt: any;
+}
+
 export interface ProfileWithClaim extends Profile {
   claim?: ProfileClaim;
 }
