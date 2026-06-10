@@ -58,7 +58,7 @@ export const GeoShape = ({
         fill={fill}
         stroke={stroke}
         strokeWidth={0.5}
-        opacity={hover && clickable ? 0.75 : 1}
+        style={{ filter: hover && clickable ? 'brightness(1.15)' : undefined }}
         cursor={clickable ? 'pointer' : 'default'}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
