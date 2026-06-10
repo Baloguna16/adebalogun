@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ThemeProvider } from '@mui/material/styles';
 import { getTheme } from '../../../theme';
@@ -49,21 +49,24 @@ beforeEach(() => {
   ) as any;
 });
 
-const renderPage = () =>
-  render(
-    <ThemeProvider theme={getTheme('light')}>
-      <TravelMap />
-    </ThemeProvider>
-  );
+const renderPage = async () => {
+  await act(async () => {
+    render(
+      <ThemeProvider theme={getTheme('light')}>
+        <TravelMap />
+      </ThemeProvider>
+    );
+  });
+};
 
 test('shows the stats header', async () => {
-  renderPage();
+  await renderPage();
   expect(await screen.findByText(/\/ 195 countries/)).toBeInTheDocument();
   expect(screen.getByText(/\/ 50 states/)).toBeInTheDocument();
 });
 
 test('clicking the US drills down to the states view and back', async () => {
-  renderPage();
+  await renderPage();
   const us = await screen.findByRole('button', { name: /United States/ });
   userEvent.click(us);
   expect(await screen.findByRole('button', { name: /world/i })).toBeInTheDocument();
@@ -78,7 +81,7 @@ test('shows an error alert with retry when geo data fails to load', async () => 
   (global.fetch as jest.Mock).mockImplementation(() =>
     Promise.resolve({ ok: false, status: 500, json: () => Promise.resolve({}) })
   );
-  renderPage();
+  await renderPage();
   expect(await screen.findByText(/could not load/i)).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /retry/i })).toBeInTheDocument();
 });
