@@ -38,6 +38,7 @@ const WeddingBudget = lazy(() => import('./views/tools/wedding-budget/WeddingBud
 const DonatePage = lazy(() => import('./views/donate').then(m => ({ default: m.DonatePage })));
 const RickrollRedirect = lazy(() => import('./views/rickroll-redirect').then(m => ({ default: m.RickrollRedirect })));
 const RickrollGenerator = lazy(() => import('./views/tools/rickroll').then(m => ({ default: m.RickrollGenerator })));
+const TravelMap = lazy(() => import('./views/tools/travel-map/TravelMap').then(m => ({ default: m.TravelMap })));
 const FamilyPage = lazy(() => import('./views/family').then(m => ({ default: m.FamilyPage })));
 const AuthCallback = lazy(() => import('./views/family/auth/AuthCallback').then(m => ({ default: m.AuthCallback })));
 const AdminDashboard = lazy(() => import('./views/family/admin/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
@@ -122,6 +123,7 @@ const routes = createRoutesFromElements(
       <Route path="/tools/markdown-viewer" element={<MarkdownViewer />} />
       <Route path="/tools/wedding-budget" element={<WeddingBudget />} />
       <Route path="/tools/rickroll" element={<RickrollGenerator />} />
+      <Route path="/tools/travel-map" element={<TravelMap />} />
       <Route path="/family" element={<FamilyPage />} />
       <Route path="/family/auth/callback" element={<AuthCallback />} />
       <Route path="/family/admin" element={<AdminDashboard />} />
