@@ -33,7 +33,6 @@ export const RickrollGenerator = () => {
   const [imageUrl, setImageUrl] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const displaySlug = slug || 'your-slug';
   const fullUrl = buildRickrollUrl(slug || 'your-slug', title, imageUrl);
 
   const handleCopy = async () => {

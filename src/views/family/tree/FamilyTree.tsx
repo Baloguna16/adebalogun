@@ -37,7 +37,7 @@ const edgeTypes = {
 function FamilyTreeInner(props: FamilyTreeProps) {
   const { focusProfileId } = props;
   const { nodes, edges, loading, treeData } = useFamilyTree(focusProfileId, props.currentUserId);
-  const { fitView, setCenter, getZoom } = useReactFlow();
+  const { setCenter } = useReactFlow();
   const { zoom } = useViewport();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));

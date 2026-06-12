@@ -75,6 +75,18 @@ export function useFamilyTree(focusProfileId: string | null, currentUserId: stri
     checkPermissions();
   }, [currentUserId, treeData.profiles]);
 
+  const toggleCollapse = useCallback((nodeId: string) => {
+    setCollapsedNodes(prev => {
+      const next = new Set(prev);
+      if (next.has(nodeId)) {
+        next.delete(nodeId);
+      } else {
+        next.add(nodeId);
+      }
+      return next;
+    });
+  }, []);
+
   useEffect(() => {
     if (treeData.profiles.length === 0) return;
 
@@ -146,19 +158,7 @@ export function useFamilyTree(focusProfileId: string | null, currentUserId: stri
     };
 
     layoutTree();
-  }, [treeData, collapsedNodes, editableProfileIds, pendingEditProfileIds]);
-
-  const toggleCollapse = useCallback((nodeId: string) => {
-    setCollapsedNodes(prev => {
-      const next = new Set(prev);
-      if (next.has(nodeId)) {
-        next.delete(nodeId);
-      } else {
-        next.add(nodeId);
-      }
-      return next;
-    });
-  }, []);
+  }, [treeData, collapsedNodes, editableProfileIds, pendingEditProfileIds, toggleCollapse]);
 
   return { nodes, edges, loading, treeData, refetch: fetchData };
 }

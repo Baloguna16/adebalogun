@@ -1,71 +1,38 @@
-import { Container, Grid, Card, CardContent, Typography, Divider } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { DirectoryList, DirectoryEntry } from '../../base/DirectoryList';
 
-interface Link {
-  path: string;
-  title: string;
-  date_completed: string;
-  type?: 'internal' | 'external';
-}
+const entries: DirectoryEntry[] = [
+  {
+    href: '/projects/travel-map',
+    title: 'Travel Map',
+    date: '2026-06',
+    external: false,
+  },
+  {
+    href: '/projects/kitchelin',
+    title: 'Kitchelin — AI Cooking Assistant',
+    date: '2025-05',
+    external: false,
+  },
+  {
+    href: '/projects/gyn-onc-fellowships',
+    title: 'ACGME Gynecologic Oncology Fellowship Map',
+    date: '2026-03',
+    external: false,
+  },
+  {
+    href: '/projects/hubbub',
+    title: 'Hubbub — Rental marketplace',
+    date: '2022-12',
+    external: false,
+  },
+  {
+    href: '/documents/pr-cultivation-io-2021.pdf',
+    title: 'Modelling input-output relationships to optimize production of a live-attenuated malaria vaccine',
+    date: '2021-10',
+    external: true,
+  },
+];
 
-interface LinkArray {
-  links: Link[];
-}
-
-const linksData: LinkArray = {
-  links: [
-    { path: '/projects/travel-map', title: 'Travel Map', date_completed: 'June 2026', type: 'internal' },
-    { path: '/projects/kitchelin', title: 'Kitchelin — AI Cooking Assistant', date_completed: 'May 2025', type: 'internal' },
-    { path: '/projects/gyn-onc-fellowships', title: 'ACGME Gynecologic Oncology Fellowship Map', date_completed: 'March 2026', type: 'internal' },
-    { path: '/projects/hubbub', title: 'Hubbub — Rental marketplace', date_completed: 'December 2022', type: 'internal' },
-    { path: '/documents/pr-cultivation-io-2021.pdf', title: 'Modelling input-output relationships to optimize production of a live-attenuated malaria vaccine', date_completed: 'October 1, 2021' }
-  ],
-};
-
-const LinkCard = ({ link }: { link: Link }) => (
-  <Card sx={{ border: 'none', boxShadow: 'none' }}>
-    <Grid container>
-      <Grid item xs={12}>
-        <CardContent>
-          <Typography variant="h6" fontWeight="bold" component="div" color="primary">
-            {link.title}
-          </Typography>
-          <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-            {"Completed on "} {link.date_completed}
-          </Typography>
-        </CardContent>
-      </Grid>
-    </Grid>
-  </Card>
+export const ProjectPosts = () => (
+  <DirectoryList heading="Projects" entries={entries} />
 );
-
-export const ProjectPosts = () => {
-  return (
-    <Container maxWidth="sm">
-      <Grid container spacing={3}>
-        {linksData.links.map((link, index) => (
-          <Grid item xs={12} key={index}>
-            {link.type === 'internal' ? (
-              <RouterLink
-                to={link.path}
-                style={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                <LinkCard link={link} />
-              </RouterLink>
-            ) : (
-              <a
-                href={link.path}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ textDecoration: 'none', color: 'inherit' }}
-              >
-                <LinkCard link={link} />
-              </a>
-            )}
-            {index < linksData.links.length - 1 && <Divider sx={{ marginY: 2 }} />}
-          </Grid>
-        ))}
-      </Grid>
-    </Container>
-  );
-};

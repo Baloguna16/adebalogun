@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, CircularProgress, Typography, TextField, Button } from '@mui/material';
 import { isSignInWithEmailLink, signInWithEmailLink } from 'firebase/auth';
@@ -12,7 +12,7 @@ export function AuthCallback() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  const completeSignIn = async (emailToUse: string) => {
+  const completeSignIn = useCallback(async (emailToUse: string) => {
     try {
       await signInWithEmailLink(auth, emailToUse, window.location.href);
       window.localStorage.removeItem(EMAIL_STORAGE_KEY);
@@ -20,7 +20,7 @@ export function AuthCallback() {
     } catch (err: any) {
       setError(err.message || 'Sign-in failed');
     }
-  };
+  }, [navigate]);
 
   useEffect(() => {
     if (!isSignInWithEmailLink(auth, window.location.href)) {
@@ -33,7 +33,7 @@ export function AuthCallback() {
     } else {
       setNeedsEmail(true);
     }
-  }, [navigate]);
+  }, [completeSignIn, navigate]);
 
   if (error) {
     return (

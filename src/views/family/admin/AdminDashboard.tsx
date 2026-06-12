@@ -3,7 +3,7 @@ import {
   Container, Typography, Box, Tabs, Tab, Button, Alert, CircularProgress, Autocomplete, TextField,
 } from '@mui/material';
 import {
-  collection, getDocs, doc, updateDoc, query, where, orderBy, serverTimestamp, writeBatch,
+  collection, getDocs, doc, updateDoc, query, orderBy, serverTimestamp, writeBatch,
 } from 'firebase/firestore';
 import { useAuth } from '../hooks/useAuth';
 import { db } from '../firebaseConfig';
