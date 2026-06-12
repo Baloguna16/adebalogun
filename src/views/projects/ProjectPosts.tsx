@@ -14,6 +14,7 @@ interface LinkArray {
 
 const linksData: LinkArray = {
   links: [
+    { path: '/projects/travel-map', title: 'Travel Map', date_completed: 'June 2026', type: 'internal' },
     { path: '/projects/kitchelin', title: 'Kitchelin — AI Cooking Assistant', date_completed: 'May 2025', type: 'internal' },
     { path: '/projects/gyn-onc-fellowships', title: 'ACGME Gynecologic Oncology Fellowship Map', date_completed: 'March 2026', type: 'internal' },
     { path: '/projects/hubbub', title: 'Hubbub — Rental marketplace', date_completed: 'December 2022', type: 'internal' },

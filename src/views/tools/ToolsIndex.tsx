@@ -23,12 +23,6 @@ const tools: Tool[] = [
     title: 'Rickroll Link Generator',
     description: 'Generate disguised links that redirect to a surprise.',
   },
-  {
-    path: '/tools/travel-map',
-    title: 'Travel Map',
-    description:
-      "An interactive map of everywhere I've traveled — click a country or state to read the diary.",
-  },
 ];
 
 export const ToolsIndex = () => (
