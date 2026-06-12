@@ -31,6 +31,7 @@ export const Navbar = () => {
                 }}>
                     <Link href="/" underline="none" sx={{ my: 2, mr: 3, color: 'primary.main', display: 'block' }}>Main</Link>
                     <Link href="/projects" underline="none" sx={{ my: 2, mr: 3, color: 'primary.main', display: 'block' }}>Projects</Link>
+                    <Link href="/tools" underline="none" sx={{ my: 2, mr: 3, color: 'primary.main', display: 'block' }}>Tools</Link>
                     <Link href="/blog" underline="none" sx={{ my: 2, mr: 3, color: 'primary.main', display: 'block' }}>Blog</Link>
                     <Box sx={{ flexGrow: 1 }} />
                     <IconButton onClick={toggleColorMode} color="inherit" sx={{ mr: 1 }}>
