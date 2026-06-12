@@ -8,12 +8,6 @@ const entries: DirectoryEntry[] = [
     date: '2026-03',
   },
   {
-    href: '/tools/wedding-budget',
-    title: 'Wedding Budget Planner',
-    description: 'Plan and compare wedding budget scenarios with CT cost estimates for a 300-guest celebration.',
-    date: '2026-04',
-  },
-  {
     href: '/tools/rickroll',
     title: 'Rickroll Link Generator',
     description: 'Generate disguised links that redirect to a surprise.',
