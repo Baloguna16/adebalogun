@@ -29,6 +29,7 @@ const HubbubPage = lazy(() => import('./views/projects/hubbub').then(m => ({ def
 const GynOncMap = lazy(() => import('./views/projects/gyn-onc-map').then(m => ({ default: m.GynOncMap })));
 const KitchelinPage = lazy(() => import('./views/projects/kitchelin').then(m => ({ default: m.KitchelinPage })));
 const TravelMap = lazy(() => import('./views/projects/travel-map/TravelMap').then(m => ({ default: m.TravelMap })));
+const NigeriaElections = lazy(() => import('./views/projects/nigeria').then(m => ({ default: m.NigeriaElections })));
 const BlogPosts = lazy(() => import('./views/blog/BlogPosts').then(m => ({ default: m.BlogPosts })));
 const PostPage = lazy(() => import('./views/blog/post/PostPage').then(m => ({ default: m.PostPage })));
 const NotFound = lazy(() => import('./views/NotFound').then(m => ({ default: m.NotFound })));
@@ -116,6 +117,7 @@ const routes = createRoutesFromElements(
       <Route path="/projects/kitchelin" element={<KitchelinPage />} />
       <Route path="/projects/gyn-onc-fellowships" element={<GynOncMap />} />
       <Route path="/projects/travel-map" element={<TravelMap />} />
+      <Route path="/projects/nigeria" element={<NigeriaElections />} />
       <Route path="/blog" element={<BlogPosts />} />
       <Route path="/blog/:slug" element={<PostPage />} />
       <Route path="/life" element={<GameOfLife />} />

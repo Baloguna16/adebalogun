@@ -2,6 +2,14 @@ import { DirectoryList, DirectoryEntry } from '../../base/DirectoryList';
 
 const entries: DirectoryEntry[] = [
   {
+    href: '/projects/nigeria',
+    title: 'Nigeria Elections',
+    description: 'Interactive per-state tracker for Nigeria’s road to 2027',
+    date: '2026-06',
+    external: false,
+    tags: ['nigeria', 'elections'],
+  },
+  {
     href: '/projects/travel-map',
     title: 'Travel Map',
     date: '2026-06',
